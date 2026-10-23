@@ -175,13 +175,15 @@
   var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman', 'Irfan', 'Ahmed', 'Arun Paul', 'Babur', 'Henry', 'Serg', 'Diluvan', 'Shiby'];
   var WAITLIST = [{ name: 'Victor', ok: false }];
   var TEAMS = [
-    { name: 'Blue', cls: 't-blue', captain: 'Taha', players: ['Taha', 'James', 'Diluvan', 'Atif Mahmud', 'Sam'], photo: '' },
-    { name: 'Green', cls: 't-green', captain: 'Fuad', players: ['Fuad', 'Babur', 'Shiby', 'Henry', 'Serg'], photo: '' },
-    { name: 'Red', cls: 't-red', captain: 'Saim', players: ['Saim', 'Irfan', 'Altamash', 'Jay', 'Mauro'], photo: '' },
-    { name: 'Purple', cls: 't-purple', captain: 'Raman', players: ['Raman', 'John', 'Arun Paul', 'Ahmed', 'Luis'], photo: '' }
+    { name: 'Blue', label: 'Name 1', cls: 't-blue', captain: 'Taha', players: ['Taha', 'James', 'Diluvan', 'Atif Mahmud', 'Sam'], photo: '' },
+    { name: 'Green', label: 'Name 2', cls: 't-green', captain: 'Fuad', players: ['Fuad', 'Babur', 'Shiby', 'Henry', 'Serg'], photo: '' },
+    { name: 'Red', label: 'Name 3', cls: 't-red', captain: 'Saim', players: ['Saim', 'Irfan', 'Altamash', 'Jay', 'Mauro'], photo: '' },
+    { name: 'Purple', label: 'Name 4', cls: 't-purple', captain: 'Raman', players: ['Raman', 'John', 'Arun Paul', 'Ahmed', 'Luis'], photo: '' }
   ];
   var CAMERA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5L9 4zm3 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>';
   var SIZE = 5;
+  /* Display name of a team; name stays the internal key used by matches and goals */
+  function label(n) { var t = TEAMS.filter(function (x) { return x.name === n; })[0]; return t ? t.label : n; }
   /* Squad list shows only players not yet placed on a team */
   var PLACED = [].concat.apply([], TEAMS.map(function (t) { return t.players; }));
   /* Order of the squad list, first = top. Anyone not listed goes after, in sign up order */
@@ -208,7 +210,7 @@
       var p = t.players[i];
       slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') : 'Open spot') + '</li>';
     }
-    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.name) + '</h3><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.name) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
+    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.label) + '</h3><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
   }).join('');
 
   /* Matches: state is 'next', 'live' or 'done'. Ties in a done match go to pens: { a: 3, b: 2 } */
@@ -236,7 +238,7 @@
     if (!t) return '<div class="m-row tbd"><span class="dot"></span><span class="nm">Winner ' + (m[key].slice(2) === 'sf1' ? 'SF1' : 'SF2') + '</span></div>';
     var cls = w ? (w === t ? ' win' : ' lose') : '';
     var sc = m.state === 'next' ? '' : goals(m, t);
-    return '<div class="m-row' + cls + '"><span class="dot" style="background:' + COLORS[t] + '"></span><span class="nm">' + esc(t) + '</span><span class="sc">' + sc + '</span></div>';
+    return '<div class="m-row' + cls + '"><span class="dot" style="background:' + COLORS[t] + '"></span><span class="nm">' + esc(label(t)) + '</span><span class="sc">' + sc + '</span></div>';
   }
   function card(m) {
     var meta = m.state === 'live' ? 'Live now' : m.state === 'done' ? 'Full time' + (m.pens ? ', pens ' + m.pens.a + ' to ' + m.pens.b : '') : m.label;
@@ -254,7 +256,7 @@
     '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
     '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
     '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
-    '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(champ) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
+    '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
 
   /* Example rows shown only until the first real goal is logged */
   var SAMPLE = [{team:'Blue',by:'Taha',ast:'Luis'},{team:'Blue',by:'Taha',ast:'John'},{team:'Purple',by:'Mauro',ast:'Raman'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim',ast:'Sam'},{team:'Purple',by:'Raman',ast:'Mauro'}];
@@ -267,7 +269,7 @@
   var list = Object.keys(stats).map(function (k) { return stats[k]; }).sort(function (x, y) { return y.g - x.g || y.a - x.a || x.name.localeCompare(y.name); });
   document.getElementById('scorers').innerHTML = list.length
     ? (demo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') + '<table class="boot' + (demo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>' + list.map(function (s, i) {
-        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + esc(s.name) + '<span class="tm">' + esc(s.team) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
+        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + esc(s.name) + '<span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
       }).join('') + '</tbody></table>'
     : '';
 </script>
