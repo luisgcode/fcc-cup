@@ -185,7 +185,7 @@
   /* Squad list shows only players not yet placed on a team */
   var PLACED = [].concat.apply([], TEAMS.map(function (t) { return t.players; }));
   /* Order of the squad list, first = top. Anyone not listed goes after, in sign up order */
-  var RANK = [];
+  var RANK = ['Sam', 'Shiby', 'Arun Paul', 'Altamash'];
   function rk(n) { var i = RANK.indexOf(n); return i === -1 ? RANK.length + CONFIRMED.indexOf(n) : i; }
   var POOL = CONFIRMED.filter(function (n) { return PLACED.indexOf(n) === -1; }).sort(function (x, y) { return rk(x) - rk(y); });
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
