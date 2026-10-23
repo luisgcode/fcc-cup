@@ -152,7 +152,7 @@
     clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); }
   @keyframes fcin { from { transform: scale(.6) rotateY(80deg); opacity: 0; } to { transform: none; opacity: 1; } }
   .fc-left { position: absolute; left: calc(var(--w) * .11); top: calc(var(--w) * .14); width: calc(var(--w) * .22); text-align: center; z-index: 1; }
-  .fc-ovr { font: 800 calc(var(--w) * .2)/.85 var(--display); }
+  .fc-ovr svg { display: block; width: calc(var(--w) * .17); height: calc(var(--w) * .17); margin: 0 auto; }
   .fc-team { margin-top: calc(var(--w) * .02); font: 700 calc(var(--w) * .042)/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; overflow-wrap: anywhere; }
   .fc-left i { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .065); border-radius: 3px; margin: calc(var(--w) * .03) auto 0; }
   .fc-left img { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .1); border-radius: 50%; background: #fff; margin: calc(var(--w) * .03) auto 0; }
@@ -425,7 +425,7 @@
     ov.className = 'fc-ov';
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', n + ' player card');
     ov.innerHTML = '<button type="button" class="fc-x" aria-label="Close">×</button><div class="fc">' +
-      '<div class="fc-left"><div class="fc-ovr">' + ovr + '</div><div class="fc-team">' + (t ? esc(t.label) : 'FCC') + '</div>' + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div>' +
+      '<div class="fc-left"><div class="fc-ovr"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></div><div class="fc-team">' + (t ? esc(t.label) : 'FCC') + '</div>' + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div>' +
       '<div class="fc-photo">' + (PHOTOS[n] ? '<img src="players/' + esc(PHOTOS[n]) + '" alt="">' : SILHOUETTE) + '</div>' +
       '<div class="fc-name' + (n.length > 9 ? ' long' : '') + '">' + esc(n) + '</div>' +
       '<div class="fc-stats">' + stats + '</div>' +
