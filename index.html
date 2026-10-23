@@ -170,7 +170,7 @@
   <div class="sec-title"><h2>Teams</h2><span>Draw pending</span></div>
   <div class="teams" id="teams"></div>
 
-  <div class="sec-title"><h2>Road to the final</h2><span>Winners advance</span></div>
+  <div class="sec-title"><h2>Road to the final</h2><span>Matchups to be drawn</span></div>
   <div class="card">
     <div class="bracket" id="bracket"></div>
   </div>
@@ -225,8 +225,8 @@
 
   /* Matches: state is 'next', 'live' or 'done'. Ties in a done match go to pens: { a: 3, b: 2 } */
   var MATCHES = [
-    { id: 'sf1', label: 'Semifinal 1', a: 'Blue', b: 'Green', state: 'next', pens: null },
-    { id: 'sf2', label: 'Semifinal 2', a: 'Red', b: 'Purple', state: 'next', pens: null },
+    { id: 'sf1', label: 'Semifinal 1', a: null, b: null, state: 'next', pens: null },
+    { id: 'sf2', label: 'Semifinal 2', a: null, b: null, state: 'next', pens: null },
     { id: 'final', label: 'Final', a: 'W:sf1', b: 'W:sf2', state: 'next', pens: null }
   ];
   /* One line per goal: { m: 'sf1', team: 'Blue', by: 'Taha', ast: 'Luis' } (ast optional) */
@@ -245,7 +245,7 @@
   }
   function row(m, key) {
     var t = side(m[key]), w = winner(m);
-    if (!t) return '<div class="m-row tbd"><span class="dot"></span><span class="nm">Winner ' + (m[key].slice(2) === 'sf1' ? 'SF1' : 'SF2') + '</span></div>';
+    if (!t) return '<div class="m-row tbd"><span class="dot"></span><span class="nm">' + (m[key] ? 'Winner ' + (m[key].slice(2) === 'sf1' ? 'SF1' : 'SF2') : 'To be drawn') + '</span></div>';
     var cls = w ? (w === t ? ' win' : ' lose') : '';
     var sc = m.state === 'next' ? '' : goals(m, t);
     return '<div class="m-row' + cls + '"><span class="dot" style="background:' + COLORS[t] + '"></span><span class="nm">' + esc(label(t)) + '</span><span class="sc">' + sc + '</span></div>';
