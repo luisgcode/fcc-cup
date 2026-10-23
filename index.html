@@ -122,6 +122,7 @@
   .champ svg { width: 34px; height: 34px; display: block; margin: 0 auto 6px; }
   .champ b { display: block; font: 800 20px/1 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
   .champ small { display: block; margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.7); }
+  @media (max-width: 480px) { .m-row { font-size: 12px; padding: 7px 6px; gap: 5px; } .m-row .sc { font-size: 16px; } .m-meta { font-size: 9px; padding: 4px 6px; } }
   .third { grid-column: 3; grid-row: 4; padding-top: 18px; }
   .third .r-label { padding-bottom: 6px; }
   .note { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
@@ -230,7 +231,7 @@
     { id: 'sf1', label: 'Semifinal 1', a: null, b: null, state: 'next', pens: null },
     { id: 'sf2', label: 'Semifinal 2', a: null, b: null, state: 'next', pens: null },
     { id: 'final', label: 'Final', a: 'W:sf1', b: 'W:sf2', state: 'next', pens: null },
-    { id: 'third', label: '3rd and 4th place', a: 'L:sf1', b: 'L:sf2', state: 'next', pens: null }
+    { id: 'third', label: '3rd place', a: 'L:sf1', b: 'L:sf2', state: 'next', pens: null }
   ];
   /* One line per goal: { m: 'sf1', team: 'Blue', by: 'Taha', ast: 'Luis' } (ast optional) */
   var GOALS = [];
@@ -253,7 +254,7 @@
   }
   function row(m, key) {
     var t = side(m[key]), w = winner(m);
-    if (!t) return '<div class="m-row tbd"><span class="dot"></span><span class="nm">' + (m[key] ? (m[key].charAt(0) === 'W' ? 'Winner ' : 'Loser ') + (m[key].slice(2) === 'sf1' ? 'SF1' : 'SF2') : 'To be drawn') + '</span></div>';
+    if (!t) return '<div class="m-row tbd"><span class="dot"></span><span class="nm">' + (m[key] ? (m[key].charAt(0) === 'W' ? 'Winner ' : 'Loser ') + (m[key].slice(2) === 'sf1' ? 'SF1' : 'SF2') : 'TBD') + '</span></div>';
     var cls = w ? (w === t ? ' win' : ' lose') : '';
     var sc = m.state === 'next' ? '' : goals(m, t);
     return '<div class="m-row' + cls + '"><span class="dot" style="background:' + COLORS[t] + '"></span><span class="nm">' + esc(label(t)) + '</span><span class="sc">' + sc + '</span></div>';
@@ -274,7 +275,7 @@
     '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
     '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
     '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
-    '<div class="third"><div class="r-label">3rd and 4th place</div>' + card(match('third')) + '</div>' +
+    '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
     '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
 
   /* Example rows shown only until the first real goal is logged */
