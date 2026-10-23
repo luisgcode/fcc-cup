@@ -123,6 +123,14 @@
   .champ b { display: block; font: 800 20px/1 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
   .champ small { display: block; margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.7); }
   @media (max-width: 480px) { .m-row { font-size: 12px; padding: 7px 6px; gap: 5px; } .m-row .sc { font-size: 16px; } .m-meta { font-size: 9px; padding: 4px 6px; } }
+  .draw { display: block; margin: 18px auto 2px; border: 0; border-radius: 30px; padding: 14px 28px; background: var(--gold); color: var(--night); font: 800 18px var(--display); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 14px rgba(245,183,0,.35); }
+  .draw:disabled { cursor: default; opacity: .85; }
+  .draw:focus-visible { outline: 3px solid var(--night); outline-offset: 3px; }
+  .rolling .cell[style*="grid-row:2"] .match, .rolling .cell[style*="grid-row:3"] .match { animation: shake .11s infinite alternate; }
+  @keyframes shake { from { transform: translateY(-1px); } to { transform: translateY(1px); } }
+  .drawn .cell[style*="grid-row:2"] .match, .drawn .cell[style*="grid-row:3"] .match { animation: pop .6s ease-out; box-shadow: 0 0 0 3px var(--gold); }
+  @keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .rolling .match, .drawn .match { animation: none !important; } }
   .third { grid-column: 3; grid-row: 4; padding-top: 18px; }
   .third .r-label { padding-bottom: 6px; }
   .note { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
@@ -176,6 +184,7 @@
   <div class="sec-title"><h2>Road to the final</h2><span>Matchups to be drawn</span></div>
   <div class="card">
     <div class="bracket" id="bracket"></div>
+    <button type="button" class="draw" id="draw-btn">Draw the semis</button>
   </div>
 
   <div class="sec-title"><h2>Golden Boot</h2><span>Goals and assists</span></div>
@@ -265,18 +274,42 @@
   }
   function lit(team) { return team ? ' style="border-color:' + COLORS[team] + '"' : ''; }
 
-  var sf1 = match('sf1'), sf2 = match('sf2'), fin = match('final');
-  var w1 = winner(sf1), w2 = winner(sf2), champ = winner(fin);
-  var trophy = '<svg viewBox="0 0 24 24" fill="#f5b700" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
-  document.getElementById('bracket').innerHTML =
-    '<div class="r-label">Semifinals</div><div></div><div class="r-label">Final</div><div></div><div class="r-label">Champion</div>' +
-    '<div class="cell" style="grid-column:1;grid-row:2">' + card(sf1) + '</div>' +
-    '<div class="cell" style="grid-column:1;grid-row:3">' + card(sf2) + '</div>' +
-    '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
-    '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
-    '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
-    '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
-    '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
+  function drawBracket() {
+    var sf1 = match('sf1'), sf2 = match('sf2'), fin = match('final');
+    var w1 = winner(sf1), w2 = winner(sf2), champ = winner(fin);
+    var trophy = '<svg viewBox="0 0 24 24" fill="#f5b700" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
+    document.getElementById('bracket').innerHTML =
+      '<div class="r-label">Semifinals</div><div></div><div class="r-label">Final</div><div></div><div class="r-label">Champion</div>' +
+      '<div class="cell" style="grid-column:1;grid-row:2">' + card(sf1) + '</div>' +
+      '<div class="cell" style="grid-column:1;grid-row:3">' + card(sf2) + '</div>' +
+      '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
+      '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
+      '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
+      '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
+      '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
+  }
+  drawBracket();
+
+  /* Live draw: shuffles the 4 teams into the semis. Nothing is saved, a reload goes back to TBD */
+  var drawBtn = document.getElementById('draw-btn');
+  if (match('sf1').a) drawBtn.hidden = true;
+  drawBtn.addEventListener('click', function () {
+    drawBtn.disabled = true;
+    drawBtn.textContent = 'Drawing...';
+    var names = TEAMS.map(function (t) { return t.name; });
+    function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[k]; a[k] = x; } return a; }
+    function place(o) { match('sf1').a = o[0]; match('sf1').b = o[1]; match('sf2').a = o[2]; match('sf2').b = o[3]; drawBracket(); }
+    var bracket = document.getElementById('bracket');
+    bracket.classList.add('rolling');
+    var spin = setInterval(function () { place(shuffle(names)); }, 110);
+    setTimeout(function () {
+      clearInterval(spin);
+      place(shuffle(names));
+      bracket.classList.remove('rolling');
+      bracket.classList.add('drawn');
+      drawBtn.textContent = 'Semis drawn!';
+    }, 5000);
+  });
 
   /* Example rows shown only until the first real goal is logged */
   var SAMPLE = [{team:'Blue',by:'Taha',ast:'Luis'},{team:'Blue',by:'Taha',ast:'John'},{team:'Purple',by:'Mauro',ast:'Raman'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim',ast:'Sam'},{team:'Purple',by:'Raman',ast:'Mauro'}];
