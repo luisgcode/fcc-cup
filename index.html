@@ -131,6 +131,11 @@
   .drawn .cell[style*="grid-row:2"] .match, .drawn .cell[style*="grid-row:3"] .match { animation: pop .6s ease-out; box-shadow: 0 0 0 3px var(--gold); }
   @keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) { .rolling .match, .drawn .match { animation: none !important; } }
+  .countdown { grid-column: 1; grid-row: 4; display: grid; place-items: center; font: 800 clamp(56px, 14vw, 110px)/1 var(--display); color: var(--gold); }
+  .countdown.go { animation: pop .4s ease-out; }
+  .m-row.spin { animation: roll .1s ease-out; }
+  @keyframes roll { from { transform: translateY(-35%); filter: blur(2px); opacity: .4; } to { transform: none; filter: none; opacity: 1; } }
+  .m-row.lock { animation: pop .45s ease-out; }
   .third { grid-column: 3; grid-row: 4; padding-top: 18px; }
   .third .r-label { padding-bottom: 6px; }
   .note { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
@@ -285,7 +290,8 @@
       '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
       '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
       '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
-      '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
+      '<div class="countdown" id="countdown"></div>' +
+    '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
       '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
   }
   drawBracket();
@@ -296,19 +302,31 @@
   drawBtn.addEventListener('click', function () {
     drawBtn.disabled = true;
     drawBtn.textContent = 'Drawing...';
+    var DURATION = 3000, lockAt = [1200, 1800, 2400, 3000];
     var names = TEAMS.map(function (t) { return t.name; });
-    function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[k]; a[k] = x; } return a; }
-    function place(o) { match('sf1').a = o[0]; match('sf1').b = o[1]; match('sf2').a = o[2]; match('sf2').b = o[3]; drawBracket(); }
+    for (var i = names.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var x = names[i]; names[i] = names[k]; names[k] = x; }
+    var shown = names.slice(), locked = 0, delay = 50, start = Date.now(), lastSec = null;
     var bracket = document.getElementById('bracket');
-    bracket.classList.add('rolling');
-    var spin = setInterval(function () { place(shuffle(names)); }, 110);
-    setTimeout(function () {
-      clearInterval(spin);
-      place(shuffle(names));
-      bracket.classList.remove('rolling');
-      bracket.classList.add('drawn');
-      drawBtn.textContent = 'Semis drawn!';
-    }, 5000);
+    function render(anim) {
+      match('sf1').a = shown[0]; match('sf1').b = shown[1]; match('sf2').a = shown[2]; match('sf2').b = shown[3];
+      drawBracket();
+      var rows = bracket.querySelectorAll('.cell[style*="grid-row:2"] .m-row, .cell[style*="grid-row:3"] .m-row');
+      for (var r = 0; r < 4; r++) rows[r].classList.add(r < locked ? (r === locked - 1 && anim === 'lock' ? 'lock' : 'done') : 'spin');
+      var left = Math.ceil((DURATION - (Date.now() - start)) / 1000), cd = document.getElementById('countdown');
+      cd.textContent = locked < 4 ? Math.max(left, 1) : '⚡';
+      if (left !== lastSec) { cd.classList.add('go'); lastSec = left; }
+    }
+    function tick() {
+      var anim = 'spin';
+      while (locked < 4 && Date.now() - start >= lockAt[locked]) { shown[locked] = names[locked]; locked++; anim = 'lock'; }
+      var free = names.slice(locked);
+      for (var q = free.length - 1; q > 0; q--) { var z = Math.floor(Math.random() * (q + 1)); var y = free[q]; free[q] = free[z]; free[z] = y; }
+      for (var s = locked; s < 4; s++) shown[s] = free[s - locked];
+      render(anim);
+      if (locked < 4) { delay = Math.min(delay * 1.07, 200); setTimeout(tick, delay); }
+      else { bracket.classList.add('drawn'); drawBtn.textContent = 'Semis drawn!'; }
+    }
+    tick();
   });
 
   /* Example rows shown only until the first real goal is logged */
