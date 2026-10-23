@@ -156,15 +156,16 @@
   .fc-team { margin-top: calc(var(--w) * .02); font: 700 calc(var(--w) * .042)/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; overflow-wrap: anywhere; }
   .fc-left i { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .065); border-radius: 3px; margin: calc(var(--w) * .03) auto 0; }
   .fc-left img { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .1); border-radius: 50%; background: #fff; margin: calc(var(--w) * .03) auto 0; }
-  .fc-photo { position: absolute; right: calc(var(--w) * .07); top: calc(var(--w) * .1); width: calc(var(--w) * .58); height: calc(var(--w) * .58); display: grid; place-items: end center; overflow: hidden; border-radius: 0 0 50% 50% / 0 0 18% 18%; }
+  .fc-photo { position: absolute; right: calc(var(--w) * .05); top: calc(var(--w) * .1); width: calc(var(--w) * .6); height: calc(var(--w) * .66); display: grid; place-items: end center; overflow: hidden;
+    -webkit-mask-image: radial-gradient(ellipse 62% 66% at 50% 42%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 62% 66% at 50% 42%, #000 62%, transparent 100%); }
   .fc-photo img { width: 100%; height: 100%; object-fit: cover; }
   .fc-photo svg { width: 88%; opacity: .4; }
-  .fc-name { position: absolute; left: calc(var(--w) * .08); right: calc(var(--w) * .08); top: calc(var(--w) * .72); text-align: center; font: 800 calc(var(--w) * .1)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: calc(var(--w) * .025); border-bottom: 1px solid rgba(59,42,5,.35); }
+  .fc-name { position: absolute; left: calc(var(--w) * .08); right: calc(var(--w) * .08); top: calc(var(--w) * .8); text-align: center; font: 800 calc(var(--w) * .1)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: calc(var(--w) * .025); border-bottom: 1px solid rgba(59,42,5,.35); }
   .fc-name.long { font-size: calc(var(--w) * .078); }
-  .fc-stats { position: absolute; left: calc(var(--w) * .14); right: calc(var(--w) * .14); top: calc(var(--w) * .86); display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(var(--w) * .08); font: 700 calc(var(--w) * .066)/1.5 var(--display); }
+  .fc-stats { position: absolute; left: calc(var(--w) * .14); right: calc(var(--w) * .14); top: calc(var(--w) * .95); display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(var(--w) * .08); font: 700 calc(var(--w) * .066)/1.5 var(--display); }
   .fc-stats div { display: flex; gap: calc(var(--w) * .03); } .fc-stats b { font-weight: 800; min-width: 1.5em; } .fc-stats span { font-weight: 600; letter-spacing: .04em; }
   .fc-stats div:nth-child(odd) { border-right: 1px solid rgba(59,42,5,.25); }
-  .fc-cap { position: absolute; left: 0; right: 0; top: calc(var(--w) * 1.24); text-align: center; font: 800 calc(var(--w) * .038) var(--display); letter-spacing: .16em; text-transform: uppercase; }
+  .fc-cap { position: absolute; left: 0; right: 0; top: calc(var(--w) * 1.3); text-align: center; font: 800 calc(var(--w) * .038) var(--display); letter-spacing: .16em; text-transform: uppercase; }
   .fc-x { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font: 600 26px/1 var(--body); cursor: pointer; }
   .fc-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { .fc, .fc-ov { animation: none; } }
