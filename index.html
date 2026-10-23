@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>FCC Lightning Cup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0d1b2e;
+    --night-2: #15294a;
+    --bg: #eef1f6;
+    --surface: #ffffff;
+    --ink: #0d1b2e;
+    --ink-soft: #5d6b80;
+    --line: #dde3ec;
+    --gold: #f5b700;
+    --blue: #1f5fbf;
+    --green: #2e9e4f;
+    --red: #e0362c;
+    --purple: #7a3bb8;
+    --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    --body: "Barlow", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); -webkit-font-smoothing: antialiased; }
+
+  /* Header band like a league broadcast */
+  .hero { background: linear-gradient(160deg, var(--night) 0%, var(--night-2) 100%); color: #fff; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px;
+    background: linear-gradient(90deg, #1f5fbf 0 16%, #2e9e4f 16% 32%, #f5b700 32% 48%, #f08a00 48% 64%, #e0362c 64% 80%, #c2187a 80% 90%, #7a3bb8 90% 100%); }
+  .hero-in { max-width: 1100px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-left)) 26px; display: flex; align-items: center; gap: 16px; }
+  .crest { flex: 0 0 auto; width: 84px; height: 84px; border-radius: 50%; background: #fff; padding: 4px; box-shadow: 0 0 0 3px rgba(255,255,255,.15); }
+  .crest img { width: 100%; height: 100%; border-radius: 50%; display: block; }
+  .kicker { font: 700 13px var(--display); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 2px; }
+  .hero h1 { font: 800 clamp(32px, 8vw, 54px)/0.95 var(--display); text-transform: uppercase; margin: 0; letter-spacing: .01em; }
+  .hero .sub { margin: 8px 0 0; color: rgba(255,255,255,.75); font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { font: 600 12px var(--body); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); padding: 4px 10px; border-radius: 20px; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-left)) 60px; }
+  .sec-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 26px 0 12px; }
+  .sec-title h2 { font: 800 24px var(--display); text-transform: uppercase; letter-spacing: .03em; margin: 0; }
+  .sec-title span { font-size: 13px; color: var(--ink-soft); }
+
+  /* Squad list */
+  .squad { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 760px) { .squad { grid-template-columns: 2fr 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--night); color: #fff; font: 700 15px var(--display); letter-spacing: .08em; text-transform: uppercase; }
+  .panel-head .count { background: var(--gold); color: var(--night); border-radius: 20px; padding: 1px 10px; font-size: 14px; }
+  .panel.wait .panel-head { background: #5d6b80; }
+  .players { list-style: none; margin: 0; padding: 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px; }
+  .players li { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; font-weight: 600; font-size: 15px; }
+  .players li:nth-child(odd) { background: #f6f8fb; }
+  .num { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--display); background: var(--night); color: #fff; }
+  .wait .num { background: #c9d1dd; color: var(--night); }
+  .tag { margin-left: auto; font: 700 10px var(--body); letter-spacing: .06em; text-transform: uppercase; color: var(--green); }
+  .tag.pending { color: var(--ink-soft); }
+
+  /* Teams */
+  .teams { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 600px) { .teams { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .teams { grid-template-columns: repeat(4, 1fr); } }
+  .team { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .team-head { padding: 14px; color: #fff; display: flex; align-items: center; gap: 10px; }
+  .team-head .badge { width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,.18); display: grid; place-items: center; font: 800 18px var(--display); }
+  .team-head h3 { margin: 0; font: 800 22px var(--display); text-transform: uppercase; letter-spacing: .04em; }
+  .team-head small { display: block; font: 600 12px var(--body); opacity: .85; }
+  .t-blue .team-head { background: var(--blue); }
+  .t-green .team-head { background: var(--green); }
+  .t-red .team-head { background: var(--red); }
+  .t-purple .team-head { background: var(--purple); }
+  .slots { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; }
+  .slot { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1.5px dashed var(--line); border-radius: 8px; color: var(--ink-soft); font-size: 14px; }
+  .slot .pos { width: 24px; height: 24px; border-radius: 50%; background: #eef1f6; display: grid; place-items: center; font: 700 12px var(--display); color: var(--ink-soft); }
+
+  footer { text-align: center; color: var(--ink-soft); font-size: 12px; padding: 20px 16px 40px; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <div class="crest"><img src="logo-400.png" alt="FriendsCafè Club of Canada Soccer"></div>
+    <div>
+      <p class="kicker">FriendsCafè Club of Canada</p>
+      <h1>Lightning Cup</h1>
+      <p class="sub">One day. Four teams. One hour of football.</p>
+      <div class="chips"><span class="chip">Tuesday</span><span class="chip">4 teams of 5</span><span class="chip">Live score</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="sec-title"><h2>Squad list</h2><span id="squad-sum"></span></div>
+  <div class="squad">
+    <section class="panel">
+      <div class="panel-head">Confirmed <span class="count" id="c-count"></span></div>
+      <ol class="players" id="confirmed"></ol>
+    </section>
+    <section class="panel wait">
+      <div class="panel-head">Wait list <span class="count" id="w-count"></span></div>
+      <ol class="players" id="waitlist"></ol>
+    </section>
+  </div>
+
+  <div class="sec-title"><h2>Teams</h2><span>Draw pending</span></div>
+  <div class="teams" id="teams"></div>
+</main>
+
+<footer>FriendsCafè Club of Canada · Soccer</footer>
+
+<script>
+  var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman'];
+  var WAITLIST = [
+    { name: 'Irfan', ok: true }, { name: 'Ahmed', ok: true }, { name: 'Arun Paul', ok: false },
+    { name: 'Victor', ok: false }, { name: 'Henry', ok: true }, { name: 'Serg', ok: true }
+  ];
+  var TEAMS = [
+    { name: 'Blue', cls: 't-blue', players: [] },
+    { name: 'Green', cls: 't-green', players: [] },
+    { name: 'Red', cls: 't-red', players: [] },
+    { name: 'Purple', cls: 't-purple', players: [] }
+  ];
+  var SIZE = 5;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  document.getElementById('confirmed').innerHTML = CONFIRMED.map(function (n, i) {
+    return '<li><span class="num">' + (i + 1) + '</span>' + esc(n) + '<span class="tag">In</span></li>';
+  }).join('');
+  document.getElementById('waitlist').innerHTML = WAITLIST.map(function (p, i) {
+    return '<li><span class="num">' + (i + 1) + '</span>' + esc(p.name) + '<span class="tag' + (p.ok ? '' : ' pending') + '">' + (p.ok ? 'Ready' : 'Pending') + '</span></li>';
+  }).join('');
+  var ready = WAITLIST.filter(function (p) { return p.ok; }).length;
+  document.getElementById('c-count').textContent = CONFIRMED.length;
+  document.getElementById('w-count').textContent = WAITLIST.length;
+  document.getElementById('squad-sum').textContent = (CONFIRMED.length + ready) + ' ready of ' + (TEAMS.length * SIZE) + ' spots';
+
+  document.getElementById('teams').innerHTML = TEAMS.map(function (t, ti) {
+    var slots = '';
+    for (var i = 0; i < SIZE; i++) {
+      var p = t.players[i];
+      slots += '<li class="slot"><span class="pos">' + (i + 1) + '</span>' + (p ? esc(p) : 'Open spot') + '</li>';
+    }
+    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.name) + '</h3><small>' + t.players.length + ' / ' + SIZE + ' players</small></div></div><ol class="slots">' + slots + '</ol></section>';
+  }).join('');
+</script>
+</body>
+</html>
