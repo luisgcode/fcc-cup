@@ -136,31 +136,35 @@
   .m-row.spin { animation: roll .1s ease-out; }
   @keyframes roll { from { transform: translateY(-35%); filter: blur(2px); opacity: .4; } to { transform: none; filter: none; opacity: 1; } }
   .m-row.lock { animation: pop .45s ease-out; }
-  .hint { display: inline-flex; align-items: center; gap: 8px; margin: -4px 0 12px; padding: 7px 14px; border-radius: 30px; background: #fff3cd; color: #8a6100; font: 700 13px var(--body); }
-  .hint svg { width: 18px; height: 18px; flex: 0 0 auto; }
-  .slot .pl::after { content: "A"; margin-left: 6px; color: var(--ink-soft); font-weight: 700; }
+  .slot .pl { border-bottom: 0; flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .slot .cap { margin-left: 0; }
+  .see { margin-left: auto; padding: 6px 12px; border-radius: 20px; background: var(--blue); color: #fff; font: 700 12px var(--body); white-space: nowrap; }
+  .slot .pl:hover .see { background: var(--night); }
   /* Player card */
   .pl { all: unset; cursor: pointer; font: inherit; color: inherit; border-bottom: 1px dotted currentColor; }
   .pl:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
   .fc-ov { position: fixed; inset: 0; z-index: 60; background: rgba(9,18,32,.82); display: grid; place-items: center; padding: 16px; animation: fcfade .2s ease-out; }
   @keyframes fcfade { from { opacity: 0; } to { opacity: 1; } }
-  .fc { position: relative; width: min(320px, 86vw); aspect-ratio: 2 / 3; color: #3b2a05; animation: fcin .45s cubic-bezier(.2,1.4,.4,1);
-    background: linear-gradient(155deg, #fff3c4 0%, #f2cf5b 30%, #d9a72b 62%, #f4d675 100%);
-    clip-path: polygon(50% 0, 100% 7%, 100% 88%, 50% 100%, 0 88%, 0 7%); padding: 13% 9% 0; display: flex; flex-direction: column; }
+  .fc { --w: min(320px, 84vw); position: relative; width: var(--w); height: calc(var(--w) * 1.5); color: #3b2a05; animation: fcin .45s cubic-bezier(.2,1.4,.4,1);
+    background: radial-gradient(120% 80% at 70% 15%, #fff6cf 0%, transparent 55%), linear-gradient(160deg, #f9e08a 0%, #e8bd45 40%, #c8961f 75%, #e9c45a 100%);
+    clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); }
+  .fc::before { content: ""; position: absolute; inset: calc(var(--w) * .035); clip-path: inherit; border: 2px solid rgba(255,255,255,.5); pointer-events: none;
+    clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); }
   @keyframes fcin { from { transform: scale(.6) rotateY(80deg); opacity: 0; } to { transform: none; opacity: 1; } }
-  .fc-top { position: relative; z-index: 1; display: flex; align-items: flex-start; }
-  .fc-ovr { font: 800 clamp(44px, 14vw, 58px)/.9 var(--display); }
-  .fc-meta { margin-left: 8px; padding-top: 4px; font: 700 13px var(--display); letter-spacing: .08em; text-transform: uppercase; line-height: 1.3; max-width: 70px; }
-  .fc-meta i { display: block; width: 22px; height: 14px; border-radius: 3px; margin-top: 4px; }
-  .fc-meta img { display: block; width: 26px; height: 26px; border-radius: 50%; background: #fff; margin-top: 6px; }
-  .fc-photo { position: absolute; right: 8%; top: 9%; width: 56%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; display: grid; place-items: end center; }
+  .fc-left { position: absolute; left: calc(var(--w) * .11); top: calc(var(--w) * .14); width: calc(var(--w) * .22); text-align: center; z-index: 1; }
+  .fc-ovr { font: 800 calc(var(--w) * .2)/.85 var(--display); }
+  .fc-team { margin-top: calc(var(--w) * .02); font: 700 calc(var(--w) * .042)/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; overflow-wrap: anywhere; }
+  .fc-left i { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .065); border-radius: 3px; margin: calc(var(--w) * .03) auto 0; }
+  .fc-left img { display: block; width: calc(var(--w) * .1); height: calc(var(--w) * .1); border-radius: 50%; background: #fff; margin: calc(var(--w) * .03) auto 0; }
+  .fc-photo { position: absolute; right: calc(var(--w) * .07); top: calc(var(--w) * .1); width: calc(var(--w) * .58); height: calc(var(--w) * .58); display: grid; place-items: end center; overflow: hidden; border-radius: 0 0 50% 50% / 0 0 18% 18%; }
   .fc-photo img { width: 100%; height: 100%; object-fit: cover; }
-  .fc-photo svg { width: 82%; opacity: .45; }
-  .fc-name { margin-top: auto; text-align: center; font: 800 clamp(24px, 8vw, 32px)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; padding: 0 4px 6px; border-bottom: 1px solid rgba(59,42,5,.3); overflow-wrap: anywhere; }
-  .fc-stats { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; padding: 8px 10% 0; font: 700 clamp(17px, 5.4vw, 21px)/1.45 var(--display); }
-  .fc-stats div { display: flex; gap: 8px; } .fc-stats b { font-weight: 800; min-width: 26px; } .fc-stats span { font-weight: 600; letter-spacing: .04em; }
-  .fc-cap { text-align: center; margin: 6px 0 0; font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; }
-  .fc-foot { height: 15%; }
+  .fc-photo svg { width: 88%; opacity: .4; }
+  .fc-name { position: absolute; left: calc(var(--w) * .08); right: calc(var(--w) * .08); top: calc(var(--w) * .72); text-align: center; font: 800 calc(var(--w) * .1)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: calc(var(--w) * .025); border-bottom: 1px solid rgba(59,42,5,.35); }
+  .fc-name.long { font-size: calc(var(--w) * .078); }
+  .fc-stats { position: absolute; left: calc(var(--w) * .14); right: calc(var(--w) * .14); top: calc(var(--w) * .86); display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(var(--w) * .08); font: 700 calc(var(--w) * .066)/1.5 var(--display); }
+  .fc-stats div { display: flex; gap: calc(var(--w) * .03); } .fc-stats b { font-weight: 800; min-width: 1.5em; } .fc-stats span { font-weight: 600; letter-spacing: .04em; }
+  .fc-stats div:nth-child(odd) { border-right: 1px solid rgba(59,42,5,.25); }
+  .fc-cap { position: absolute; left: 0; right: 0; top: calc(var(--w) * 1.24); text-align: center; font: 800 calc(var(--w) * .038) var(--display); letter-spacing: .16em; text-transform: uppercase; }
   .fc-x { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font: 600 26px/1 var(--body); cursor: pointer; }
   .fc-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { .fc, .fc-ov { animation: none; } }
@@ -224,7 +228,6 @@
   </div>
 
   <div class="sec-title"><h2>Teams</h2></div>
-  <p class="hint"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/><path d="M8 17h8" stroke="currentColor" stroke-width="2"/></svg>Tap any player to see their card and stats</p>
   <div class="teams" id="teams"></div>
 
   <div class="sec-title"><h2>Road to the final</h2><span>Matchups to be drawn</span></div>
@@ -276,7 +279,7 @@
     var slots = '';
     for (var i = 0; i < SIZE; i++) {
       var p = t.players[i];
-      slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? '<button type="button" class="pl" data-player="' + esc(p) + '">' + esc(p) + '</button>' + (p === t.captain ? '<span class="cap">Captain</span>' : '') : 'Open spot') + '</li>';
+      slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? '<button type="button" class="pl" data-player="' + esc(p) + '">' + esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') + '<span class="see">View card ›</span></button>' : 'Open spot') + '</li>';
     }
     return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.label) + '</h3><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
   }).join('');
@@ -404,7 +407,8 @@
   var SET = {
     Raman: { PAC: 90 }, Serg: { PAC: 90 }, Sam: { PAC: 88 },
     Diluvan: { PHY: 90 },
-    Mauro: { DEF: 88 }, Luis: { DEF: 88 }
+    Mauro: { DEF: 88 }, Luis: { DEF: 88 },
+    Babur: { DEF: 64 }
   };
   var CAP = { PAC: 86, DEF: 86, PHY: 87 };
   var STYLES = [[4, 2, 0, 2, -4, -1], [-1, 4, 1, 2, -4, 0], [0, -1, 4, 2, -2, -2], [-2, -3, 1, -1, 4, 3], [1, -2, 0, 0, 2, 4], [2, 1, 2, 4, -3, -2]];
@@ -418,11 +422,11 @@
     ov.className = 'fc-ov';
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', n + ' player card');
     ov.innerHTML = '<button type="button" class="fc-x" aria-label="Close">×</button><div class="fc">' +
-      '<div class="fc-top"><div class="fc-ovr">' + ovr + '</div><div class="fc-meta">' + (t ? esc(t.label) : 'FCC') + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div></div>' +
+      '<div class="fc-left"><div class="fc-ovr">' + ovr + '</div><div class="fc-team">' + (t ? esc(t.label) : 'FCC') + '</div>' + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div>' +
       '<div class="fc-photo">' + (PHOTOS[n] ? '<img src="players/' + esc(PHOTOS[n]) + '" alt="">' : SILHOUETTE) + '</div>' +
-      '<div class="fc-name">' + esc(n) + '</div>' +
+      '<div class="fc-name' + (n.length > 9 ? ' long' : '') + '">' + esc(n) + '</div>' +
       '<div class="fc-stats">' + stats + '</div>' +
-      '<div class="fc-cap">' + (t && t.captain === n ? 'Captain' : ' ') + '</div><div class="fc-foot"></div></div>';
+      (t && t.captain === n ? '<div class="fc-cap">Captain</div>' : '') + '</div>';
     function close() { ov.remove(); document.removeEventListener('keydown', onKey); }
     function onKey(e) { if (e.key === 'Escape') close(); }
     ov.addEventListener('click', function (e) { if (e.target === ov || e.target.classList.contains('fc-x')) close(); });
