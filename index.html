@@ -396,13 +396,20 @@
   };
   /* Photo per player, file name inside the players folder. Missing = silhouette */
   var PHOTOS = {};
+  /* Hand set stats. Generated stats are capped below these so the named players stay on top */
+  var SET = {
+    Raman: { PAC: 90 }, Serg: { PAC: 90 }, Sam: { PAC: 88 },
+    Diluvan: { PHY: 90 },
+    Mauro: { DEF: 88 }, Luis: { DEF: 88 }
+  };
+  var CAP = { PAC: 86, DEF: 86, PHY: 87 };
   var STYLES = [[4, 2, 0, 2, -4, -1], [-1, 4, 1, 2, -4, 0], [0, -1, 4, 2, -2, -2], [-2, -3, 1, -1, 4, 3], [1, -2, 0, 0, 2, 4], [2, 1, 2, 4, -3, -2]];
   function seed(n) { var h = 7; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 9973; return h; }
   function teamOf(n) { return TEAMS.filter(function (t) { return t.players.indexOf(n) > -1; })[0]; }
   var SILHOUETTE = '<svg viewBox="0 0 24 24" fill="#3b2a05" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 24c0-5.2 3.8-8.6 8.5-8.6s8.5 3.4 8.5 8.6z"/></svg>';
   function openCard(n) {
     var ovr = RATING[n] || 76, st = STYLES[seed(n) % STYLES.length], t = teamOf(n);
-    var stats = ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'].map(function (k, i) { return '<div><b>' + Math.max(60, Math.min(90, ovr + st[i])) + '</b><span>' + k + '</span></div>'; }).join('');
+    var stats = ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'].map(function (k, i) { var v = SET[n] && SET[n][k] ? SET[n][k] : Math.max(60, Math.min(CAP[k] || 90, ovr + st[i])); return '<div><b>' + v + '</b><span>' + k + '</span></div>'; }).join('');
     var ov = document.createElement('div');
     ov.className = 'fc-ov';
     ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', n + ' player card');
