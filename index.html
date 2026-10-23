@@ -136,6 +136,31 @@
   .m-row.spin { animation: roll .1s ease-out; }
   @keyframes roll { from { transform: translateY(-35%); filter: blur(2px); opacity: .4; } to { transform: none; filter: none; opacity: 1; } }
   .m-row.lock { animation: pop .45s ease-out; }
+  /* Player card */
+  .pl { all: unset; cursor: pointer; font: inherit; color: inherit; border-bottom: 1px dotted currentColor; }
+  .pl:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
+  .fc-ov { position: fixed; inset: 0; z-index: 60; background: rgba(9,18,32,.82); display: grid; place-items: center; padding: 16px; animation: fcfade .2s ease-out; }
+  @keyframes fcfade { from { opacity: 0; } to { opacity: 1; } }
+  .fc { position: relative; width: min(320px, 86vw); aspect-ratio: 2 / 3; color: #3b2a05; animation: fcin .45s cubic-bezier(.2,1.4,.4,1);
+    background: linear-gradient(155deg, #fff3c4 0%, #f2cf5b 30%, #d9a72b 62%, #f4d675 100%);
+    clip-path: polygon(50% 0, 100% 7%, 100% 88%, 50% 100%, 0 88%, 0 7%); padding: 13% 9% 0; display: flex; flex-direction: column; }
+  @keyframes fcin { from { transform: scale(.6) rotateY(80deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .fc-top { position: relative; z-index: 1; display: flex; align-items: flex-start; }
+  .fc-ovr { font: 800 clamp(44px, 14vw, 58px)/.9 var(--display); }
+  .fc-meta { margin-left: 8px; padding-top: 4px; font: 700 13px var(--display); letter-spacing: .08em; text-transform: uppercase; line-height: 1.3; max-width: 70px; }
+  .fc-meta i { display: block; width: 22px; height: 14px; border-radius: 3px; margin-top: 4px; }
+  .fc-meta img { display: block; width: 26px; height: 26px; border-radius: 50%; background: #fff; margin-top: 6px; }
+  .fc-photo { position: absolute; right: 8%; top: 9%; width: 56%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; display: grid; place-items: end center; }
+  .fc-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .fc-photo svg { width: 82%; opacity: .45; }
+  .fc-name { margin-top: auto; text-align: center; font: 800 clamp(24px, 8vw, 32px)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; padding: 0 4px 6px; border-bottom: 1px solid rgba(59,42,5,.3); overflow-wrap: anywhere; }
+  .fc-stats { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; padding: 8px 10% 0; font: 700 clamp(17px, 5.4vw, 21px)/1.45 var(--display); }
+  .fc-stats div { display: flex; gap: 8px; } .fc-stats b { font-weight: 800; min-width: 26px; } .fc-stats span { font-weight: 600; letter-spacing: .04em; }
+  .fc-cap { text-align: center; margin: 6px 0 0; font: 700 11px var(--body); letter-spacing: .14em; text-transform: uppercase; }
+  .fc-foot { height: 15%; }
+  .fc-x { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font: 600 26px/1 var(--body); cursor: pointer; }
+  .fc-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .fc, .fc-ov { animation: none; } }
   .third { grid-column: 3; grid-row: 4; padding-top: 18px; }
   .third .r-label { padding-bottom: 6px; }
   .note { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
@@ -247,7 +272,7 @@
     var slots = '';
     for (var i = 0; i < SIZE; i++) {
       var p = t.players[i];
-      slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') : 'Open spot') + '</li>';
+      slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? '<button type="button" class="pl" data-player="' + esc(p) + '">' + esc(p) + '</button>' + (p === t.captain ? '<span class="cap">Captain</span>' : '') : 'Open spot') + '</li>';
     }
     return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.label) + '</h3><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
   }).join('');
@@ -358,9 +383,43 @@
   var list = Object.keys(stats).map(function (k) { return stats[k]; }).sort(function (x, y) { return y.g - x.g || y.a - x.a || x.name.localeCompare(y.name); });
   document.getElementById('scorers').innerHTML = list.length
     ? (demo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') + '<table class="boot' + (demo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>' + list.map(function (s, i) {
-        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + esc(s.name) + '<span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
+        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + '<button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
       }).join('') + '</tbody></table>'
     : '';
+
+  /* Player cards. RATING is the overall; the six stats lean on a style picked per player so everyone shines at something */
+  var RATING = {
+    Taha: 84, Fuad: 84, Saim: 83, Raman: 83,
+    Sam: 82, Serg: 82, Mauro: 81, Luis: 81,
+    James: 79, Babur: 79, Irfan: 78, Diluvan: 78, Shiby: 78, John: 77, 'Arun Paul': 77, Altamash: 77, Henry: 77,
+    Jay: 76, 'Atif Mahmud': 76, Ahmed: 76
+  };
+  /* Photo per player, file name inside the players folder. Missing = silhouette */
+  var PHOTOS = {};
+  var STYLES = [[4, 2, 0, 2, -4, -1], [-1, 4, 1, 2, -4, 0], [0, -1, 4, 2, -2, -2], [-2, -3, 1, -1, 4, 3], [1, -2, 0, 0, 2, 4], [2, 1, 2, 4, -3, -2]];
+  function seed(n) { var h = 7; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 9973; return h; }
+  function teamOf(n) { return TEAMS.filter(function (t) { return t.players.indexOf(n) > -1; })[0]; }
+  var SILHOUETTE = '<svg viewBox="0 0 24 24" fill="#3b2a05" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 24c0-5.2 3.8-8.6 8.5-8.6s8.5 3.4 8.5 8.6z"/></svg>';
+  function openCard(n) {
+    var ovr = RATING[n] || 76, st = STYLES[seed(n) % STYLES.length], t = teamOf(n);
+    var stats = ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'].map(function (k, i) { return '<div><b>' + Math.max(60, Math.min(90, ovr + st[i])) + '</b><span>' + k + '</span></div>'; }).join('');
+    var ov = document.createElement('div');
+    ov.className = 'fc-ov';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', n + ' player card');
+    ov.innerHTML = '<button type="button" class="fc-x" aria-label="Close">×</button><div class="fc">' +
+      '<div class="fc-top"><div class="fc-ovr">' + ovr + '</div><div class="fc-meta">' + (t ? esc(t.label) : 'FCC') + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div></div>' +
+      '<div class="fc-photo">' + (PHOTOS[n] ? '<img src="players/' + esc(PHOTOS[n]) + '" alt="">' : SILHOUETTE) + '</div>' +
+      '<div class="fc-name">' + esc(n) + '</div>' +
+      '<div class="fc-stats">' + stats + '</div>' +
+      '<div class="fc-cap">' + (t && t.captain === n ? 'Captain' : ' ') + '</div><div class="fc-foot"></div></div>';
+    function close() { ov.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    ov.addEventListener('click', function (e) { if (e.target === ov || e.target.classList.contains('fc-x')) close(); });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(ov);
+    ov.querySelector('.fc-x').focus();
+  }
+  document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.pl'); if (b) openCard(b.getAttribute('data-player')); });
 </script>
 </body>
 </html>
