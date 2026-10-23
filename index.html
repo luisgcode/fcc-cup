@@ -101,6 +101,7 @@
   .r-label { font: 700 12px var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding-bottom: 8px; text-align: center; }
   .cell { padding: 7px 0; display: flex; align-items: center; min-width: 0; }
   .cell.span { grid-row: 2 / 4; }
+  .c-sf1 { grid-column: 1; grid-row: 2; } .c-sf2 { grid-column: 1; grid-row: 3; } .c-conn1 { grid-column: 2; } .c-fin { grid-column: 3; } .c-conn2 { grid-column: 4; } .c-champ { grid-column: 5; }
   .match { width: 100%; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(13,27,46,.06); }
   .m-row { display: flex; align-items: center; gap: 7px; padding: 8px 9px; font-weight: 600; font-size: 14px; min-width: 0; }
   .m-row + .m-row { border-top: 1px solid var(--line); }
@@ -122,13 +123,12 @@
   .champ svg { width: 34px; height: 34px; display: block; margin: 0 auto 6px; }
   .champ b { display: block; font: 800 20px/1 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
   .champ small { display: block; margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.7); }
-  @media (max-width: 480px) { .m-row { font-size: 12px; padding: 7px 6px; gap: 5px; } .m-row .sc { font-size: 16px; } .m-meta { font-size: 9px; padding: 4px 6px; } }
   .draw { display: block; margin: 18px auto 2px; border: 0; border-radius: 30px; padding: 14px 28px; background: var(--gold); color: var(--night); font: 800 18px var(--display); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 14px rgba(245,183,0,.35); }
   .draw:disabled { cursor: default; opacity: .85; }
   .draw:focus-visible { outline: 3px solid var(--night); outline-offset: 3px; }
-  .rolling .cell[style*="grid-row:2"] .match, .rolling .cell[style*="grid-row:3"] .match { animation: shake .11s infinite alternate; }
+  .rolling .c-sf1 .match, .rolling .c-sf2 .match { animation: shake .11s infinite alternate; }
   @keyframes shake { from { transform: translateY(-1px); } to { transform: translateY(1px); } }
-  .drawn .cell[style*="grid-row:2"] .match, .drawn .cell[style*="grid-row:3"] .match { animation: pop .6s ease-out; box-shadow: 0 0 0 3px var(--gold); }
+  .drawn .c-sf1 .match, .drawn .c-sf2 .match { animation: pop .6s ease-out; box-shadow: 0 0 0 3px var(--gold); }
   @keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) { .rolling .match, .drawn .match { animation: none !important; } }
   .countdown { grid-column: 1; grid-row: 4; display: grid; place-items: center; font: 800 clamp(56px, 14vw, 110px)/1 var(--display); color: var(--gold); }
@@ -155,6 +155,18 @@
   .empty { text-align: center; color: var(--ink-soft); padding: 18px 8px; font-size: 14px; }
 
   footer { text-align: center; color: var(--ink-soft); font-size: 12px; padding: 20px 16px 40px; }
+  /* Phones: semis side by side, then final and champion, then 3rd place. No connector lines */
+  @media (max-width: 599px) {
+    .bracket { grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: none; column-gap: 10px;
+      grid-template-areas: "lsf lsf" "sf1 sf2" "cd cd" "lfin lch" "fin champ" "third third"; }
+    .bracket > * { grid-row: auto; grid-column: auto; }
+    .bracket .l-sf { grid-area: lsf; } .bracket .c-sf1 { grid-area: sf1; } .bracket .c-sf2 { grid-area: sf2; } .bracket .countdown { grid-area: cd; }
+    .bracket .l-fin { grid-area: lfin; padding-top: 14px; } .bracket .l-ch { grid-area: lch; padding-top: 14px; }
+    .bracket .c-fin { grid-area: fin; } .bracket .c-champ { grid-area: champ; }
+    .bracket .third { grid-area: third; } .third .match { max-width: calc(50% - 5px); margin: 0 auto; }
+    .bracket .conn, .bracket .l-gap { display: none; }
+    .countdown:not(:empty) { padding: 10px 0 4px; }
+  }
 </style>
 </head>
 <body>
@@ -284,15 +296,15 @@
     var w1 = winner(sf1), w2 = winner(sf2), champ = winner(fin);
     var trophy = '<svg viewBox="0 0 24 24" fill="#f5b700" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
     document.getElementById('bracket').innerHTML =
-      '<div class="r-label">Semifinals</div><div></div><div class="r-label">Final</div><div></div><div class="r-label">Champion</div>' +
-      '<div class="cell" style="grid-column:1;grid-row:2">' + card(sf1) + '</div>' +
-      '<div class="cell" style="grid-column:1;grid-row:3">' + card(sf2) + '</div>' +
-      '<div class="conn" style="grid-column:2"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
-      '<div class="cell span" style="grid-column:3">' + card(fin) + '</div>' +
-      '<div class="conn solo" style="grid-column:4"><i class="out"' + lit(champ) + '></i></div>' +
+      '<div class="r-label l-sf">Semifinals</div><div class="l-gap"></div><div class="r-label l-fin">Final</div><div class="l-gap"></div><div class="r-label l-ch">Champion</div>' +
+      '<div class="cell c-sf1">' + card(sf1) + '</div>' +
+      '<div class="cell c-sf2">' + card(sf2) + '</div>' +
+      '<div class="conn c-conn1"><i class="up"' + lit(w1) + '></i><i class="dn"' + lit(w2) + '></i><i class="out"' + lit(w1 && w2 ? null : (w1 || w2)) + '></i></div>' +
+      '<div class="cell span c-fin">' + card(fin) + '</div>' +
+      '<div class="conn solo c-conn2"><i class="out"' + lit(champ) + '></i></div>' +
       '<div class="countdown" id="countdown"></div>' +
-    '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
-      '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
+      '<div class="third"><div class="r-label">3rd place game</div>' + card(match('third')) + '</div>' +
+      '<div class="cell span c-champ"><div class="champ">' + trophy + '<b>' + (champ ? esc(label(champ)) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
   }
   drawBracket();
 
@@ -302,28 +314,34 @@
   drawBtn.addEventListener('click', function () {
     drawBtn.disabled = true;
     drawBtn.textContent = 'Drawing...';
-    var DURATION = 3000, lockAt = [1200, 1800, 2400, 3000];
+    var DURATION = 3000;
+    /* Lock order: first team of semi 1, first team of semi 2, then the other two together */
+    var LOCKS = [{ at: 1400, slots: [0] }, { at: 2200, slots: [2] }, { at: 3000, slots: [1, 3] }];
     var names = TEAMS.map(function (t) { return t.name; });
-    for (var i = names.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var x = names[i]; names[i] = names[k]; names[k] = x; }
-    var shown = names.slice(), locked = 0, delay = 50, start = Date.now(), lastSec = null;
+    function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[k]; a[k] = x; } return a; }
+    names = shuffle(names);
+    var shown = names.slice(), isLocked = [false, false, false, false], step = 0, delay = 60, start = Date.now(), lastSec = null;
     var bracket = document.getElementById('bracket');
-    function render(anim) {
+    function render(justLocked) {
       match('sf1').a = shown[0]; match('sf1').b = shown[1]; match('sf2').a = shown[2]; match('sf2').b = shown[3];
       drawBracket();
-      var rows = bracket.querySelectorAll('.cell[style*="grid-row:2"] .m-row, .cell[style*="grid-row:3"] .m-row');
-      for (var r = 0; r < 4; r++) rows[r].classList.add(r < locked ? (r === locked - 1 && anim === 'lock' ? 'lock' : 'done') : 'spin');
+      var rows = bracket.querySelectorAll('.c-sf1 .m-row, .c-sf2 .m-row');
+      for (var r = 0; r < 4; r++) rows[r].classList.add(justLocked.indexOf(r) > -1 ? 'lock' : isLocked[r] ? 'done' : 'spin');
       var left = Math.ceil((DURATION - (Date.now() - start)) / 1000), cd = document.getElementById('countdown');
-      cd.textContent = locked < 4 ? Math.max(left, 1) : '⚡';
+      cd.textContent = step < LOCKS.length ? Math.max(left, 1) : '⚡';
       if (left !== lastSec) { cd.classList.add('go'); lastSec = left; }
     }
     function tick() {
-      var anim = 'spin';
-      while (locked < 4 && Date.now() - start >= lockAt[locked]) { shown[locked] = names[locked]; locked++; anim = 'lock'; }
-      var free = names.slice(locked);
-      for (var q = free.length - 1; q > 0; q--) { var z = Math.floor(Math.random() * (q + 1)); var y = free[q]; free[q] = free[z]; free[z] = y; }
-      for (var s = locked; s < 4; s++) shown[s] = free[s - locked];
-      render(anim);
-      if (locked < 4) { delay = Math.min(delay * 1.07, 200); setTimeout(tick, delay); }
+      var justLocked = [];
+      while (step < LOCKS.length && Date.now() - start >= LOCKS[step].at) {
+        LOCKS[step].slots.forEach(function (n) { isLocked[n] = true; shown[n] = names[n]; justLocked.push(n); });
+        step++;
+      }
+      var open = [0, 1, 2, 3].filter(function (n) { return !isLocked[n]; });
+      var pool = shuffle(open.map(function (n) { return names[n]; }));
+      open.forEach(function (n, k) { shown[n] = pool[k]; });
+      render(justLocked);
+      if (step < LOCKS.length) { delay = Math.min(delay * 1.05, 180); setTimeout(tick, delay); }
       else { bracket.classList.add('drawn'); drawBtn.textContent = 'Semis drawn!'; }
     }
     tick();
