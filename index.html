@@ -80,6 +80,8 @@
   .photo .ph svg { width: 34px; height: 34px; display: block; margin: 0 auto 6px; opacity: .55; }
   .slots { list-style: none; margin: 0; padding: 8px; display: grid; gap: 6px; }
   .slot { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1.5px dashed var(--line); border-radius: 8px; color: var(--ink-soft); font-size: 14px; }
+  .slot.filled { border-style: solid; color: var(--ink); font-weight: 600; background: #fff; }
+  .cap { margin-left: auto; padding: 2px 8px; border-radius: 4px; background: var(--gold); color: var(--night); font: 800 11px var(--display); letter-spacing: .08em; text-transform: uppercase; }
   .slot .pos { width: 24px; height: 24px; border-radius: 50%; background: #eef1f6; display: grid; place-items: center; font: 700 12px var(--display); color: var(--ink-soft); }
 
   /* Bracket */
@@ -173,23 +175,26 @@
   var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman', 'Irfan', 'Ahmed', 'Arun Paul', 'Henry', 'Serg', 'Diluvan'];
   var WAITLIST = [{ name: 'Victor', ok: false }, { name: 'Shiby', ok: false }];
   var TEAMS = [
-    { name: 'Blue', cls: 't-blue', players: [], photo: '' },
-    { name: 'Green', cls: 't-green', players: [], photo: '' },
-    { name: 'Red', cls: 't-red', players: [], photo: '' },
-    { name: 'Purple', cls: 't-purple', players: [], photo: '' }
+    { name: 'Blue', cls: 't-blue', captain: 'Taha', players: ['Taha'], photo: '' },
+    { name: 'Green', cls: 't-green', captain: 'Fuad', players: ['Fuad'], photo: '' },
+    { name: 'Red', cls: 't-red', captain: 'Saim', players: ['Saim'], photo: '' },
+    { name: 'Purple', cls: 't-purple', captain: 'Raman', players: ['Raman'], photo: '' }
   ];
   var CAMERA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5L9 4zm3 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>';
   var SIZE = 5;
+  /* Squad list shows only players not yet placed on a team */
+  var PLACED = [].concat.apply([], TEAMS.map(function (t) { return t.players; }));
+  var POOL = CONFIRMED.filter(function (n) { return PLACED.indexOf(n) === -1; });
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  document.getElementById('confirmed').innerHTML = CONFIRMED.map(function (n, i) {
+  document.getElementById('confirmed').innerHTML = POOL.map(function (n, i) {
     return '<li><span class="num">' + (i + 1) + '</span>' + esc(n) + '<span class="tag">In</span></li>';
   }).join('');
   document.getElementById('waitlist').innerHTML = WAITLIST.map(function (p, i) {
     return '<li><span class="num">' + (i + 1) + '</span>' + esc(p.name) + '<span class="tag' + (p.ok ? '' : ' pending') + '">' + (p.ok ? 'Ready' : 'Pending') + '</span></li>';
   }).join('');
   var ready = WAITLIST.filter(function (p) { return p.ok; }).length;
-  document.getElementById('c-count').textContent = CONFIRMED.length;
+  document.getElementById('c-count').textContent = POOL.length;
   document.getElementById('w-count').textContent = WAITLIST.length;
   document.getElementById('squad-sum').textContent = (CONFIRMED.length + ready) + ' ready of ' + (TEAMS.length * SIZE) + ' spots';
 
@@ -197,7 +202,7 @@
     var slots = '';
     for (var i = 0; i < SIZE; i++) {
       var p = t.players[i];
-      slots += '<li class="slot"><span class="pos">' + (i + 1) + '</span>' + (p ? esc(p) : 'Open spot') + '</li>';
+      slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') : 'Open spot') + '</li>';
     }
     return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.name) + '</h3><small>' + t.players.length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.name) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
   }).join('');
@@ -248,7 +253,7 @@
     '<div class="cell span" style="grid-column:5"><div class="champ">' + trophy + '<b>' + (champ ? esc(champ) : 'TBD') + '</b><small>' + (champ ? 'Lightning Cup winners' : 'Lifts the cup') + '</small></div></div>';
 
   /* Example rows shown only until the first real goal is logged */
-  var SAMPLE = [{team:'Blue',by:'Taha',ast:'Luis'},{team:'Blue',by:'Taha',ast:'John'},{team:'Purple',by:'Mauro',ast:'Raman'},{team:'Red',by:'Fuad'},{team:'Green',by:'Jay',ast:'Sam'},{team:'Purple',by:'Raman',ast:'Mauro'}];
+  var SAMPLE = [{team:'Blue',by:'Taha',ast:'Luis'},{team:'Blue',by:'Taha',ast:'John'},{team:'Purple',by:'Mauro',ast:'Raman'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim',ast:'Sam'},{team:'Purple',by:'Raman',ast:'Mauro'}];
   var demo = GOALS.length === 0;
   var stats = {};
   (demo ? SAMPLE : GOALS).forEach(function (g) {
