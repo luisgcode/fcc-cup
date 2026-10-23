@@ -175,10 +175,10 @@
   var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman', 'Irfan', 'Ahmed', 'Arun Paul', 'Babur', 'Henry', 'Serg', 'Diluvan', 'Shiby'];
   var WAITLIST = [{ name: 'Victor', ok: false }];
   var TEAMS = [
-    { name: 'Blue', cls: 't-blue', captain: 'Taha', players: ['Taha', 'James', 'Diluvan', null, 'Sam'], photo: '' },
-    { name: 'Green', cls: 't-green', captain: 'Fuad', players: ['Fuad', 'Babur', 'Shiby', null, 'Serg'], photo: '' },
-    { name: 'Red', cls: 't-red', captain: 'Saim', players: ['Saim', 'Irfan', 'Altamash', null, 'Mauro'], photo: '' },
-    { name: 'Purple', cls: 't-purple', captain: 'Raman', players: ['Raman', 'John', 'Arun Paul', null, 'Luis'], photo: '' }
+    { name: 'Blue', cls: 't-blue', captain: 'Taha', players: ['Taha', 'James', 'Diluvan', 'Atif Mahmud', 'Sam'], photo: '' },
+    { name: 'Green', cls: 't-green', captain: 'Fuad', players: ['Fuad', 'Babur', 'Shiby', 'Henry', 'Serg'], photo: '' },
+    { name: 'Red', cls: 't-red', captain: 'Saim', players: ['Saim', 'Irfan', 'Altamash', 'Jay', 'Mauro'], photo: '' },
+    { name: 'Purple', cls: 't-purple', captain: 'Raman', players: ['Raman', 'John', 'Arun Paul', 'Ahmed', 'Luis'], photo: '' }
   ];
   var CAMERA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5L9 4zm3 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>';
   var SIZE = 5;
@@ -197,6 +197,7 @@
     return '<li><span class="num">' + (i + 1) + '</span>' + esc(p.name) + '<span class="tag' + (p.ok ? '' : ' pending') + '">' + (p.ok ? 'Ready' : 'Pending') + '</span></li>';
   }).join('');
   var ready = WAITLIST.filter(function (p) { return p.ok; }).length;
+  if (!POOL.length) document.getElementById('confirmed').innerHTML = '<li style="grid-column:1/-1;color:var(--ink-soft);font-weight:500">All players are on a team. See you on the pitch.</li>';
   document.getElementById('c-count').textContent = POOL.length;
   document.getElementById('w-count').textContent = WAITLIST.length;
   document.getElementById('squad-sum').textContent = (CONFIRMED.length + ready) + ' ready of ' + (TEAMS.length * SIZE) + ' spots';
