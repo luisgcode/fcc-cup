@@ -136,6 +136,9 @@
   .m-row.spin { animation: roll .1s ease-out; }
   @keyframes roll { from { transform: translateY(-35%); filter: blur(2px); opacity: .4; } to { transform: none; filter: none; opacity: 1; } }
   .m-row.lock { animation: pop .45s ease-out; }
+  .hint { display: inline-flex; align-items: center; gap: 8px; margin: -4px 0 12px; padding: 7px 14px; border-radius: 30px; background: #fff3cd; color: #8a6100; font: 700 13px var(--body); }
+  .hint svg { width: 18px; height: 18px; flex: 0 0 auto; }
+  .slot .pl::after { content: "A"; margin-left: 6px; color: var(--ink-soft); font-weight: 700; }
   /* Player card */
   .pl { all: unset; cursor: pointer; font: inherit; color: inherit; border-bottom: 1px dotted currentColor; }
   .pl:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
@@ -220,7 +223,8 @@
     </section>
   </div>
 
-  <div class="sec-title"><h2>Teams</h2><span>Draw pending</span></div>
+  <div class="sec-title"><h2>Teams</h2></div>
+  <p class="hint"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="currentColor"/><path d="M8 17h8" stroke="currentColor" stroke-width="2"/></svg>Tap any player to see their card and stats</p>
   <div class="teams" id="teams"></div>
 
   <div class="sec-title"><h2>Road to the final</h2><span>Matchups to be drawn</span></div>
@@ -229,7 +233,7 @@
     <button type="button" class="draw" id="draw-btn">Draw the semis</button>
   </div>
 
-  <div class="sec-title"><h2>Golden Boot</h2><span>Goals and assists</span></div>
+  <div class="sec-title"><h2>Golden Boot</h2><span>Tap a player to see their card</span></div>
   <div class="card" id="scorers"></div>
 </main>
 
