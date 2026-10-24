@@ -325,7 +325,7 @@
       var p = t.players[i];
       slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? '<button type="button" class="pl" data-player="' + esc(p) + '">' + esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') + '<span class="see">View card ›</span></button>' : 'Open spot') + '</li>';
     }
-    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><button type="button" class="team-name" data-team="' + esc(t.name) + '"><h3>' + esc(t.label) + '</h3><span class="see">View team \u203A</span></button><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
+    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><button type="button" class="team-name" data-team="' + esc(t.name) + '"><h3>' + esc(t.label) + '</h3><span class="see">View team \u203A</span></button><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div>' + (t.photo ? '<div class="photo"><img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy"></div>' : '') + '<ol class="slots">' + slots + '</ol></section>';
   }).join('');
 
   /* Matches: state is 'next', 'live' or 'done'. Ties in a done match go to pens: { a: 3, b: 2 } */
