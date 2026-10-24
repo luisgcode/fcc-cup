@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,900&family=Barlow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; }
+  body { background: #0b1729; color: #fff; font-family: Barlow, sans-serif; position: relative; }
+  .bg { position: absolute; inset: 0; background:
+      radial-gradient(900px 700px at 85% 10%, rgba(31,95,191,.45), transparent 60%),
+      radial-gradient(800px 600px at 0% 100%, rgba(122,59,184,.35), transparent 60%),
+      linear-gradient(170deg, #0d1b2e 0%, #0a1424 100%); }
+  .pitch { position: absolute; inset: 0; opacity: .07; }
+  .bolt { position: absolute; right: -60px; top: 120px; width: 560px; opacity: .10; }
+  .stripe { position: absolute; left: 0; right: 0; height: 14px;
+    background: linear-gradient(90deg, #1f5fbf 0 16%, #2e9e4f 16% 32%, #f5b700 32% 48%, #f08a00 48% 64%, #e0362c 64% 80%, #c2187a 80% 90%, #7a3bb8 90% 100%); }
+  .top { top: 0; } .bot { bottom: 0; }
+  .wrap { position: relative; padding: 78px 80px 0; height: 100%; display: flex; flex-direction: column; }
+  .head { display: flex; align-items: center; gap: 28px; }
+  .crest { width: 150px; height: 150px; border-radius: 50%; background: #fff; padding: 6px; box-shadow: 0 0 0 6px rgba(255,255,255,.12), 0 20px 50px rgba(0,0,0,.4); flex: 0 0 auto; }
+  .crest img { width: 100%; height: 100%; border-radius: 50%; display: block; }
+  .club { font: 800 30px 'Barlow Condensed'; letter-spacing: .2em; text-transform: uppercase; color: #f5b700; line-height: 1.15; }
+  .club small { display: block; color: rgba(255,255,255,.65); font: 600 22px Barlow; letter-spacing: .04em; text-transform: none; margin-top: 6px; }
+  h1 { margin-top: 64px; font: italic 900 210px/.82 'Barlow Condensed'; text-transform: uppercase; letter-spacing: -.01em; }
+  h1 .l2 { display: block; color: #f5b700; }
+  .tag { margin-top: 26px; font: 600 34px Barlow; color: rgba(255,255,255,.82); }
+  .info { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .box { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 18px; padding: 22px 26px; }
+  .box.wide { grid-column: 1 / -1; }
+  .box .k { font: 700 18px Barlow; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+  .box .v { margin-top: 6px; font: 800 50px/1 'Barlow Condensed'; text-transform: uppercase; }
+  .teams { margin-top: 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .team { border-radius: 16px; padding: 18px 18px 16px; }
+  .team .n { font: 900 40px/1 'Barlow Condensed'; text-transform: uppercase; }
+  .team .c { margin-top: 8px; font: 700 24px 'Barlow Condensed'; letter-spacing: .04em; text-transform: uppercase; }
+  .foot { margin-top: auto; padding-bottom: 54px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .foot .live { font: 800 30px 'Barlow Condensed'; letter-spacing: .1em; text-transform: uppercase; color: #f5b700; }
+  .foot .url { font: 600 28px Barlow; margin-top: 4px; }
+  .foot .fmt { text-align: right; font: 700 24px 'Barlow Condensed'; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.65); line-height: 1.4; }
+</style></head>
+<body>
+<div class="bg"></div>
+<svg class="pitch" viewBox="0 0 1080 1350" fill="none" stroke="#fff" stroke-width="4">
+  <rect x="40" y="40" width="1000" height="1270"/><line x1="40" y1="675" x2="1040" y2="675"/><circle cx="540" cy="675" r="150"/>
+  <rect x="300" y="40" width="480" height="200"/><rect x="300" y="1110" width="480" height="200"/>
+</svg>
+<svg class="bolt" viewBox="0 0 24 24" fill="#f5b700"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+<div class="stripe top"></div>
+<div class="wrap">
+  <div class="head">
+    <div class="crest"><img src="../logo-400.png"></div>
+    <div class="club">FriendsCafè Club<br>of Canada<small>Soccer night</small></div>
+  </div>
+  <h1>Lightning<span class="l2">Cup</span></h1>
+  <p class="tag">One night. Four teams. Ninety minutes of football.</p>
+  <div class="info">
+    <div class="box"><div class="k">Date</div><div class="v">Tue, Oct 27</div></div>
+    <div class="box"><div class="k">Kick off</div><div class="v">8:45 to 10:15 pm</div></div>
+    <div class="box wide"><div class="k">Venue</div><div class="v">Comdev Soccer Dome, Cambridge ON</div></div>
+  </div>
+  <div class="teams">
+    <div class="team" style="background:#1f5fbf"><div class="n">Name 1</div><div class="c">Capt. Taha</div></div>
+    <div class="team" style="background:#2e9e4f"><div class="n">Name 2</div><div class="c">Capt. Fuad</div></div>
+    <div class="team" style="background:#e0362c"><div class="n">Name 3</div><div class="c">Capt. Saim</div></div>
+    <div class="team" style="background:#7a3bb8"><div class="n">Name 4</div><div class="c">Capt. Raman</div></div>
+  </div>
+  <div class="foot">
+    <div><div class="live">Teams, scores and Golden Boot live</div><div class="url">luisgcode.github.io/fcc-cup</div></div>
+    <div class="fmt">20 players<br>Semis and final</div>
+  </div>
+</div>
+<div class="stripe bot"></div>
+</body></html>
