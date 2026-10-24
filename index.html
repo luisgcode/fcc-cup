@@ -145,12 +145,11 @@
   .pl:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
   .fc-ov { position: fixed; inset: 0; z-index: 60; background: rgba(9,18,32,.82); display: grid; place-items: center; padding: 16px; animation: fcfade .2s ease-out; }
   @keyframes fcfade { from { opacity: 0; } to { opacity: 1; } }
-  .fc { --w: min(320px, 84vw); position: relative; width: var(--w); height: calc(var(--w) * 1.5); color: #3b2a05; animation: fcin .45s cubic-bezier(.2,1.4,.4,1);
+  .fc { position: relative; width: var(--w); height: calc(var(--w) * 1.5); color: #3b2a05;
     background: radial-gradient(120% 80% at 70% 15%, #fff6cf 0%, transparent 55%), linear-gradient(160deg, #f9e08a 0%, #e8bd45 40%, #c8961f 75%, #e9c45a 100%);
     clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); }
   .fc::before { content: ""; position: absolute; inset: calc(var(--w) * .035); clip-path: inherit; border: 2px solid rgba(255,255,255,.5); pointer-events: none;
     clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); }
-  @keyframes fcin { from { transform: scale(.6) rotateY(80deg); opacity: 0; } to { transform: none; opacity: 1; } }
   .fc-left { position: absolute; left: calc(var(--w) * .11); top: calc(var(--w) * .14); width: calc(var(--w) * .22); text-align: center; z-index: 1; }
   .fc-ovr svg { display: block; width: calc(var(--w) * .17); height: calc(var(--w) * .17); margin: 0 auto; }
   .fc-team { margin-top: calc(var(--w) * .02); font: 700 calc(var(--w) * .042)/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; overflow-wrap: anywhere; }
@@ -166,9 +165,50 @@
   .fc-stats div { display: flex; gap: calc(var(--w) * .03); } .fc-stats b { font-weight: 800; min-width: 1.5em; } .fc-stats span { font-weight: 600; letter-spacing: .04em; }
   .fc-stats div:nth-child(odd) { border-right: 1px solid rgba(59,42,5,.25); }
   .fc-cap { position: absolute; left: 0; right: 0; top: calc(var(--w) * 1.3); text-align: center; font: 800 calc(var(--w) * .038) var(--display); letter-spacing: .16em; text-transform: uppercase; }
+  /* Pack reveal: the card shows its back, glows, spins and lands face up */
+  .flip { --w: min(320px, 84vw); position: relative; width: var(--w); height: calc(var(--w) * 1.5); perspective: 1400px; flex: 0 0 auto; }
+  .flip-in { position: absolute; inset: 0; }
+  .flip-in > * { position: absolute; inset: 0; }
+  .flip-in > .fc-back { animation: backside 1.6s ease-in both; animation-delay: var(--d, 0s); }
+  .flip-in > .fc { animation: frontside 1.6s ease-out both; animation-delay: var(--d, 0s); }
+  .fc-back { clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 40%, #2a4a80 0%, #0d1b2e 70%); }
+  .fc-back::before { content: ""; position: absolute; inset: calc(var(--w) * .035); clip-path: polygon(50% 0, 100% 6%, 100% 86%, 50% 100%, 0 86%, 0 6%); border: 2px solid rgba(245,183,0,.7); }
+  .fc-back img { width: calc(var(--w) * .42); height: calc(var(--w) * .42); border-radius: 50%; background: #fff; padding: 4px; box-shadow: 0 0 calc(var(--w) * .12) rgba(245,183,0,.7); animation: pulse .5s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+  .flip::before { content: ""; position: absolute; left: 50%; top: 50%; width: 160%; height: 120%; transform: translate(-50%, -50%) scale(0); border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,226,120,.9) 0%, rgba(245,183,0,.35) 35%, transparent 70%); animation: burst 1.6s ease-out both; animation-delay: var(--d, 0s); pointer-events: none; }
+  @keyframes backside {
+    0% { transform: translateY(40px) scale(.6); opacity: 0; }
+    14% { transform: none; opacity: 1; }
+    26% { transform: rotate(-3deg) scale(1.03); }
+    36% { transform: rotate(3deg) scale(1.03); }
+    46% { transform: rotate(-2deg) scale(1.05); }
+    56% { transform: rotateY(0) scale(1.05); opacity: 1; }
+    66% { transform: rotateY(90deg) scale(1.08); opacity: 1; }
+    66.1%, 100% { transform: rotateY(90deg); opacity: 0; }
+  }
+  @keyframes frontside {
+    0%, 66% { transform: rotateY(-90deg) scale(1.08); opacity: 0; }
+    66.1% { opacity: 1; }
+    82% { transform: rotateY(12deg) scale(1.04); opacity: 1; }
+    100% { transform: rotateY(0) scale(1); opacity: 1; }
+  }
+  @keyframes pulse { to { box-shadow: 0 0 calc(var(--w) * .2) rgba(255,226,120,1); } }
+  @keyframes burst { 0%, 60% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 70% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; } }
+  /* Team view: the five cards in a row, swipe on phones */
+  .tv { width: 100%; max-width: 1150px; max-height: 100%; overflow-y: auto; text-align: center; }
+  .tv h3 { margin: 6px 0 2px; color: #fff; font: 800 clamp(30px, 8vw, 46px)/1 var(--display); text-transform: uppercase; }
+  .tv p { margin: 0 0 14px; color: rgba(255,255,255,.65); font: 600 13px var(--body); }
+  .tv-row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 16px 20px; }
+  .tv-row .flip { --w: min(230px, 64vw); scroll-snap-align: center; }
+  @media (min-width: 1000px) { .tv-row { justify-content: center; overflow: visible; flex-wrap: wrap; } .tv-row .flip { --w: 196px; } }
+  .team-name { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+  .team-name:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }
+  .team-name .see { background: rgba(255,255,255,.22); color: #fff; padding: 3px 9px; font-size: 11px; }
+  .team-name:hover .see { background: #fff; color: var(--night); }
+  @media (prefers-reduced-motion: reduce) { .flip-in > *, .flip::before, .fc-back img { animation-duration: .01s; } }
   .fc-x { position: absolute; top: 14px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font: 600 26px/1 var(--body); cursor: pointer; }
   .fc-x:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { .fc, .fc-ov { animation: none; } }
   .third { grid-column: 3; grid-row: 4; padding-top: 18px; }
   .third .r-label { padding-bottom: 6px; }
   .note { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
@@ -282,7 +322,7 @@
       var p = t.players[i];
       slots += '<li class="slot' + (p ? ' filled' : '') + '"><span class="pos">' + (i + 1) + '</span>' + (p ? '<button type="button" class="pl" data-player="' + esc(p) + '">' + esc(p) + (p === t.captain ? '<span class="cap">Captain</span>' : '') + '<span class="see">View card ›</span></button>' : 'Open spot') + '</li>';
     }
-    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><h3>' + esc(t.label) + '</h3><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
+    return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><button type="button" class="team-name" data-team="' + esc(t.name) + '"><h3>' + esc(t.label) + '</h3><span class="see">View team \u203A</span></button><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div><div class="photo">' + (t.photo ? '<img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy">' : '<div class="ph">' + CAMERA + 'Team photo</div>') + '</div><ol class="slots">' + slots + '</ol></section>';
   }).join('');
 
   /* Matches: state is 'next', 'live' or 'done'. Ties in a done match go to pens: { a: 3, b: 2 } */
@@ -429,26 +469,37 @@
   function seed(n) { var h = 7; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 9973; return h; }
   function teamOf(n) { return TEAMS.filter(function (t) { return t.players.indexOf(n) > -1; })[0]; }
   var SILHOUETTE = '<svg viewBox="0 0 24 24" fill="#3b2a05" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 24c0-5.2 3.8-8.6 8.5-8.6s8.5 3.4 8.5 8.6z"/></svg>';
-  function openCard(n) {
+  function cardHTML(n, delay) {
     var ovr = RATING[n] || 76, st = STYLES[seed(n) % STYLES.length], t = teamOf(n);
     var stats = ['PAC', 'SHO', 'PAS', 'DRI', 'DEF', 'PHY'].map(function (k, i) { var v = SET[n] && SET[n][k] ? SET[n][k] : Math.max(60, Math.min(CAP[k] || 90, ovr + st[i])); return '<div><b>' + v + '</b><span>' + k + '</span></div>'; }).join('');
-    var ov = document.createElement('div');
-    ov.className = 'fc-ov';
-    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', n + ' player card');
-    ov.innerHTML = '<button type="button" class="fc-x" aria-label="Close">×</button><div class="fc">' +
+    return '<div class="flip"' + (delay ? ' style="--d:' + delay + 's"' : '') + '><div class="flip-in"><div class="fc-back"><img src="logo-400.png" alt=""></div><div class="fc">' +
       '<div class="fc-left"><div class="fc-ovr"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></div><div class="fc-team">' + (t ? esc(t.label) : 'FCC') + '</div>' + (t ? '<i style="background:' + COLORS[t.name] + '"></i>' : '') + '<img src="logo-400.png" alt=""></div>' +
       '<div class="fc-photo">' + (PHOTOS[n] ? '<img src="players/' + esc(PHOTOS[n]) + '" alt="">' : SILHOUETTE) + '</div>' +
       '<div class="fc-name' + (n.length > 9 ? ' long' : '') + '">' + esc(n) + '</div>' +
       '<div class="fc-stats">' + stats + '</div>' +
-      (t && t.captain === n ? '<div class="fc-cap">Captain</div>' : '') + '</div>';
+      (t && t.captain === n ? '<div class="fc-cap">Captain</div>' : '') + '</div>' + '</div></div>';
+  }
+  function overlay(html, labelText) {
+    var ov = document.createElement('div');
+    ov.className = 'fc-ov';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', labelText);
+    ov.innerHTML = '<button type="button" class="fc-x" aria-label="Close">\u00D7</button>' + html;
     function close() { ov.remove(); document.removeEventListener('keydown', onKey); }
     function onKey(e) { if (e.key === 'Escape') close(); }
-    ov.addEventListener('click', function (e) { if (e.target === ov || e.target.classList.contains('fc-x')) close(); });
+    ov.addEventListener('click', function (e) { if (e.target === ov || e.target.classList.contains('fc-x') || e.target.classList.contains('tv') || e.target.classList.contains('tv-row')) close(); });
     document.addEventListener('keydown', onKey);
     document.body.appendChild(ov);
     ov.querySelector('.fc-x').focus();
   }
-  document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.pl'); if (b) openCard(b.getAttribute('data-player')); });
+  function openCard(n) { overlay(cardHTML(n), n + ' player card'); }
+  function openTeam(name) {
+    var t = TEAMS.filter(function (x) { return x.name === name; })[0];
+    if (!t) return;
+    var ps = t.players.filter(Boolean);
+    overlay('<div class="tv"><h3>' + esc(t.label) + '</h3><p>Captain ' + esc(t.captain) + '</p><div class="tv-row">' +
+      ps.map(function (n, i) { return cardHTML(n, (i * 0.35).toFixed(2)); }).join('') + '</div></div>', t.label + ' team cards');
+  }
+  document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.pl'); if (b) openCard(b.getAttribute('data-player')); var tb = e.target.closest && e.target.closest('.team-name'); if (tb) openTeam(tb.getAttribute('data-team')); });
 </script>
 </body>
 </html>
