@@ -202,6 +202,8 @@
   .tv::-webkit-scrollbar, .tv-row::-webkit-scrollbar { display: none; }
   .tv h3 { margin: 6px 0 2px; color: #fff; font: 800 clamp(30px, 8vw, 46px)/1 var(--display); text-transform: uppercase; }
   .tv p { margin: 0 0 14px; color: rgba(255,255,255,.65); font: 600 13px var(--body); }
+  .tv { position: relative; z-index: 1; }
+  .fw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
   .tv-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 8px; padding: 8px 6px 18px; }
   .tv-row .flip { --w: min(calc((100vw - 66px) / 3), 210px); }
   @media (min-width: 1000px) { .tv-row { justify-content: center; overflow: visible; flex-wrap: wrap; } .tv-row .flip { --w: 196px; } }
@@ -494,6 +496,52 @@
     document.body.appendChild(ov);
     ov.querySelector('.fc-x').focus();
   }
+  /* Fireworks behind the team cards, once the five cards have flipped */
+  var TEAM_COLORS = { 't-blue': '#3b82f6', 't-green': '#22c55e', 't-red': '#ef4444', 't-purple': '#a855f7' };
+  function fireworks(ov, teamColor, startDelay) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cv = document.createElement('canvas'); cv.className = 'fw'; ov.insertBefore(cv, ov.firstChild);
+    var ctx = cv.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1), W, H;
+    function size() { W = ov.clientWidth; H = ov.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    size(); window.addEventListener('resize', size);
+    var palette = [teamColor, '#f5b700', '#ffe27a', '#ffffff', teamColor];
+    var rockets = [], sparks = [], t0 = performance.now() + startDelay * 1000, nextLaunch = 0, last = performance.now();
+    function launch() {
+      var x = W * (0.12 + Math.random() * 0.76);
+      rockets.push({ x: x, y: H + 10, vx: (Math.random() - 0.5) * 60, vy: -(H * (0.9 + Math.random() * 0.35)),
+        target: H * (0.12 + Math.random() * 0.33), color: palette[(Math.random() * palette.length) | 0] });
+    }
+    function burst(r) {
+      var n = 46 + ((Math.random() * 30) | 0), sp = 90 + Math.random() * 120, alt = palette[(Math.random() * palette.length) | 0];
+      for (var i = 0; i < n; i++) {
+        var a = (i / n) * Math.PI * 2 + Math.random() * 0.2, v = sp * (0.55 + Math.random() * 0.45);
+        sparks.push({ x: r.x, y: r.y, px: r.x, py: r.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1,
+          decay: 0.55 + Math.random() * 0.4, color: Math.random() < 0.7 ? r.color : alt });
+      }
+    }
+    function frame(now) {
+      if (!ov.isConnected) { window.removeEventListener('resize', size); return; }
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      if (now >= t0 && now >= nextLaunch) { launch(); if (Math.random() < 0.35) launch(); nextLaunch = now + 420 + Math.random() * 520; }
+      for (var i = rockets.length - 1; i >= 0; i--) {
+        var r = rockets[i]; r.vy += 260 * dt; r.x += r.vx * dt; r.y += r.vy * dt;
+        ctx.fillStyle = r.color; ctx.beginPath(); ctx.arc(r.x, r.y, 2.2, 0, 7); ctx.fill();
+        if (r.y <= r.target || r.vy >= 0) { burst(r); rockets.splice(i, 1); }
+      }
+      for (var j = sparks.length - 1; j >= 0; j--) {
+        var s = sparks[j]; s.px = s.x; s.py = s.y; s.vx *= 0.985; s.vy = s.vy * 0.985 + 70 * dt;
+        s.x += s.vx * dt; s.y += s.vy * dt; s.life -= s.decay * dt;
+        if (s.life <= 0) { sparks.splice(j, 1); continue; }
+        ctx.strokeStyle = s.color; ctx.globalAlpha = Math.max(0, s.life); ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(s.px, s.py); ctx.lineTo(s.x, s.y); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
   function openCard(n) { overlay(cardHTML(n), n + ' player card'); }
   function openTeam(name) {
     var t = TEAMS.filter(function (x) { return x.name === name; })[0];
@@ -501,6 +549,8 @@
     var ps = t.players.filter(Boolean);
     overlay('<div class="tv"><h3>' + esc(t.label) + '</h3><p>FCC Lightning Cup · Captain ' + esc(t.captain) + '</p><div class="tv-row">' +
       ps.map(function (n, i) { return cardHTML(n, (i * 0.35).toFixed(2)); }).join('') + '</div></div>', t.label + ' team cards');
+    var ov = document.querySelector('.fc-ov:last-of-type');
+    if (ov) fireworks(ov, TEAM_COLORS[t.cls] || '#f5b700', (ps.length - 1) * 0.35 + 1.6);
   }
   document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.pl'); if (b) openCard(b.getAttribute('data-player')); var tb = e.target.closest && e.target.closest('.team-name'); if (tb) openTeam(tb.getAttribute('data-team')); });
 </script>
