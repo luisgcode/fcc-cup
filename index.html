@@ -143,7 +143,7 @@
   /* Player card */
   .pl { all: unset; cursor: pointer; font: inherit; color: inherit; border-bottom: 1px dotted currentColor; }
   .pl:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
-  .fc-ov { position: fixed; inset: 0; z-index: 60; background: rgba(9,18,32,.82); display: grid; place-items: center; padding: 16px; animation: fcfade .2s ease-out; }
+  .fc-ov { position: fixed; inset: 0; z-index: 60; background: rgba(9,18,32,.96); display: grid; place-items: center; padding: 16px; animation: fcfade .2s ease-out; }
   @keyframes fcfade { from { opacity: 0; } to { opacity: 1; } }
   .fc { position: relative; width: var(--w); height: calc(var(--w) * 1.5); color: #3b2a05;
     background: radial-gradient(120% 80% at 70% 15%, #fff6cf 0%, transparent 55%), linear-gradient(160deg, #f9e08a 0%, #e8bd45 40%, #c8961f 75%, #e9c45a 100%);
@@ -195,15 +195,15 @@
   }
   @keyframes pulse { to { box-shadow: 0 0 calc(var(--w) * .2) rgba(255,226,120,1); } }
   @keyframes burst { 0%, 60% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 70% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; } }
-  /* Team view: the five cards in a row, swipe on phones */
+  /* Team view: phones show the whole team on one screen (3 + 2) so it can be screenshotted and shared */
   .tv { width: 100%; max-width: 1150px; max-height: 100%; overflow-y: auto; text-align: center; }
   /* Scroll still works (swipe on phones) but no visible bars */
   .tv, .tv-row { scrollbar-width: none; -ms-overflow-style: none; }
   .tv::-webkit-scrollbar, .tv-row::-webkit-scrollbar { display: none; }
   .tv h3 { margin: 6px 0 2px; color: #fff; font: 800 clamp(30px, 8vw, 46px)/1 var(--display); text-transform: uppercase; }
   .tv p { margin: 0 0 14px; color: rgba(255,255,255,.65); font: 600 13px var(--body); }
-  .tv-row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 16px 20px; }
-  .tv-row .flip { --w: min(230px, 64vw); scroll-snap-align: center; }
+  .tv-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 8px; padding: 8px 6px 18px; }
+  .tv-row .flip { --w: min(calc((100vw - 66px) / 3), 210px); }
   @media (min-width: 1000px) { .tv-row { justify-content: center; overflow: visible; flex-wrap: wrap; } .tv-row .flip { --w: 196px; } }
   .team-name { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
   .team-name:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }
@@ -499,7 +499,7 @@
     var t = TEAMS.filter(function (x) { return x.name === name; })[0];
     if (!t) return;
     var ps = t.players.filter(Boolean);
-    overlay('<div class="tv"><h3>' + esc(t.label) + '</h3><p>Captain ' + esc(t.captain) + '</p><div class="tv-row">' +
+    overlay('<div class="tv"><h3>' + esc(t.label) + '</h3><p>FCC Lightning Cup · Captain ' + esc(t.captain) + '</p><div class="tv-row">' +
       ps.map(function (n, i) { return cardHTML(n, (i * 0.35).toFixed(2)); }).join('') + '</div></div>', t.label + ' team cards');
   }
   document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.pl'); if (b) openCard(b.getAttribute('data-player')); var tb = e.target.closest && e.target.closest('.team-name'); if (tb) openTeam(tb.getAttribute('data-team')); });
