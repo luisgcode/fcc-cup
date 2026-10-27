@@ -266,6 +266,8 @@
   .roster .pl:hover, .roster .pl:focus-visible { background: var(--night); color: #fff; }
   .roster .pl i { font: 800 10px var(--display); font-style: normal; background: var(--gold); color: var(--night); border-radius: 3px; padding: 0 4px; }
   .pod:first-child { background: #fffaea; }
+  .ed.is-example { opacity: .6; }
+  .ed.is-example .ed-state { background: #fff3cd; color: #8a6100; }
   .ed-boot { padding: 0 14px 12px; font-size: 14px; color: var(--ink-soft); }
   .ed-boot b { color: var(--ink); }
   .boot td.avg { font: 600 14px var(--body); color: var(--ink-soft); }
@@ -522,16 +524,22 @@
     };
   }
   var EDITIONS = ARCHIVE.concat([currentSnapshot()]);
+  /* Example editions, shown in Champions only. They never count in the all-time table or the goal badges. Delete when real ones exist */
+  function ex(name) { var t = podTeam(name); return t; }
+  var EXAMPLES = [
+    { id: 'B', name: 'Lightning Cup', date: 'Date TBD', venue: 'Comdev Soccer Dome, Cambridge', example: true, champion: ex('Blue'), scorers: [{ name: 'Taha', g: 3, gp: 2 }] },
+    { id: 'C', name: 'Lightning Cup', date: 'Date TBD', venue: 'Comdev Soccer Dome, Cambridge', example: true, champion: ex('Red'), scorers: [{ name: 'Saim', g: 4, gp: 2 }] }
+  ];
   var TROPHY = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
   function topOf(list) { return list.slice().sort(function (x, y) { return y.g - x.g || x.gp - y.gp; })[0]; }
 
-  document.getElementById('editions').innerHTML = EDITIONS.slice().reverse().map(function (e) {
+  document.getElementById('editions').innerHTML = EDITIONS.concat(EXAMPLES).reverse().map(function (e) {
     var done = e.champion;
     var pods = [e.champion].map(function (p) {
       return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m1">' + TROPHY + '</div><div><span>Champion</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
     }).join('');
     var top = topOf(e.scorers);
-    return '<section class="ed"><div class="ed-head"><div class="ed-no">Ed<b>' + esc(e.id) + '</b></div><div><h3>' + esc(e.name) + '</h3><small>' + esc(e.date) + ' · ' + esc(e.venue) + '</small></div><span class="ed-state">' + (done ? 'Final' : e.live ? 'Tonight' : '') + '</span></div>' +
+    return '<section class="ed' + (e.example ? ' is-example' : '') + '"><div class="ed-head"><div class="ed-no">Ed<b>' + esc(e.id) + '</b></div><div><h3>' + esc(e.name) + '</h3><small>' + esc(e.date) + ' · ' + esc(e.venue) + '</small></div><span class="ed-state">' + (e.example ? 'Example' : done ? 'Final' : e.live ? 'Tonight' : '') + '</span></div>' +
       '<div class="podium">' + pods + '</div>' +
       '<div class="ed-boot">Top scorer: ' + (top ? '<b>' + esc(top.name) + '</b>, ' + top.g + (top.g === 1 ? ' goal' : ' goals') + ' in ' + top.gp + (top.gp === 1 ? ' match' : ' matches') : 'to be decided') + '</div></section>';
   }).join('');
