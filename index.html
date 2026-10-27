@@ -272,6 +272,9 @@
   .legend { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
 
   footer { text-align: center; color: var(--ink-soft); font-size: 12px; padding: 20px 16px 40px; }
+  footer br + * , footer a { color: var(--ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--line); }
+  footer a:hover { border-bottom-color: var(--ink); }
+  footer { line-height: 1.9; }
   /* Phones: semis side by side, then final and champion, then 3rd place. No connector lines */
   @media (max-width: 599px) {
     .bracket { grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: none; column-gap: 10px;
@@ -337,7 +340,7 @@
   <div class="card" id="alltime"></div>
 </main>
 
-<footer>FriendsCafè Club of Canada · Soccer</footer>
+<footer>FriendsCafè Club of Canada · Soccer<br>Made with 💖 by <a href="https://www.luisgcode.com/" target="_blank" rel="noopener">Luis Guaiquirian</a></footer>
 
 <script>
   var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman', 'Irfan', 'Ahmed', 'Arun Paul', 'Babur', 'Henry', 'Serg', 'Diluvan', 'Shiby'];
