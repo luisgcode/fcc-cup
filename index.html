@@ -341,7 +341,7 @@
 
 <script>
   var CONFIRMED = ['Taha', 'Luis', 'John', 'Jay', 'James', 'Sam', 'Saim', 'Atif Mahmud', 'Fuad', 'Altamash', 'Mauro', 'Raman', 'Irfan', 'Ahmed', 'Arun Paul', 'Babur', 'Henry', 'Serg', 'Diluvan', 'Shiby'];
-  var WAITLIST = [{ name: 'Victor', ok: false }, { name: 'Ibi', ok: false }, { name: 'Bilal', ok: false }];
+  var WAITLIST = [];
   var TEAMS = [
     { name: 'Blue', label: 'Goal Diggers', cls: 't-blue', captain: 'Taha', players: ['Taha', 'James', 'Diluvan', 'Atif Mahmud', 'Sam'], photo: '' },
     { name: 'Green', label: 'Winners FC', cls: 't-green', captain: 'Fuad', players: ['Fuad', 'Babur', 'Shiby', 'Henry', 'Serg'], photo: '' },
@@ -370,6 +370,8 @@
   if (!POOL.length) document.getElementById('confirmed').innerHTML = '<li style="grid-column:1/-1;color:var(--ink-soft);font-weight:500">All players are on a team. See you on the pitch.</li>';
   document.getElementById('c-count').textContent = POOL.length;
   document.getElementById('w-count').textContent = WAITLIST.length;
+  /* No one waiting: hide the wait list and let the squad panel take the full width */
+  if (!WAITLIST.length) { document.querySelector('.panel.wait').hidden = true; document.querySelector('.squad').style.gridTemplateColumns = '1fr'; }
   document.getElementById('squad-sum').textContent = (CONFIRMED.length + ready) + ' ready of ' + (TEAMS.length * SIZE) + ' spots';
 
   document.getElementById('teams').innerHTML = TEAMS.map(function (t, ti) {
