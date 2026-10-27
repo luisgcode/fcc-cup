@@ -390,7 +390,7 @@
     { id: 'final', label: 'Final', a: 'W:sf1', b: 'W:sf2', state: 'next', pens: null },
     { id: 'third', label: '3rd place', a: 'L:sf1', b: 'L:sf2', state: 'next', pens: null }
   ];
-  /* One line per goal: { m: 'sf1', team: 'Blue', by: 'Taha', ast: 'Luis' } (ast optional) */
+  /* One line per goal: { m: 'sf1', team: 'Blue', by: 'Taha' } */
   var GOALS = [];
 
   var COLORS = { Blue: '#1f5fbf', Green: '#2e9e4f', Red: '#e0362c', Purple: '#7a3bb8' };
@@ -479,17 +479,16 @@
   });
 
   /* Example rows shown only until the first real goal is logged */
-  var SAMPLE = [{team:'Blue',by:'Taha',ast:'Luis'},{team:'Blue',by:'Taha',ast:'John'},{team:'Purple',by:'Mauro',ast:'Raman'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim',ast:'Sam'},{team:'Purple',by:'Raman',ast:'Mauro'}];
+  var SAMPLE = [{team:'Blue',by:'Taha'},{team:'Blue',by:'Taha'},{team:'Purple',by:'Mauro'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim'},{team:'Purple',by:'Raman'}];
   var demo = GOALS.length === 0;
   var stats = {};
   (demo ? SAMPLE : GOALS).forEach(function (g) {
-    var s = stats[g.by] || (stats[g.by] = { name: g.by, team: g.team, g: 0, a: 0 }); s.g++;
-    if (g.ast) { var t = stats[g.ast] || (stats[g.ast] = { name: g.ast, team: g.team, g: 0, a: 0 }); t.a++; }
+    var s = stats[g.by] || (stats[g.by] = { name: g.by, team: g.team, g: 0 }); s.g++;
   });
-  var list = Object.keys(stats).map(function (k) { return stats[k]; }).sort(function (x, y) { return y.g - x.g || y.a - x.a || x.name.localeCompare(y.name); });
+  var list = Object.keys(stats).map(function (k) { return stats[k]; }).sort(function (x, y) { return y.g - x.g || x.name.localeCompare(y.name); });
   document.getElementById('scorers').innerHTML = list.length
-    ? (demo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') + '<table class="boot' + (demo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">A</th></tr></thead><tbody>' + list.map(function (s, i) {
-        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + '<button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
+    ? (demo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') + '<table class="boot' + (demo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">MP</th></tr></thead><tbody>' + list.map(function (s, i) {
+        return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + '<button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + (demo ? 1 : played(s.name)) + '</td></tr>';
       }).join('') + '</tbody></table>'
     : '';
 
