@@ -249,10 +249,9 @@
   .ed-head small { display: block; color: rgba(255,255,255,.7); font: 500 13px var(--body); }
   .ed-state { margin-left: auto; font: 700 11px var(--body); letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,.14); }
   .podium { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 12px; }
-  @media (min-width: 600px) { .podium { grid-template-columns: 1.2fr 1fr 1fr; } }
   .pod { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; border-left-width: 5px; }
   .pod .medal { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 15px var(--display); color: var(--night); }
-  .pod .m1 { background: var(--gold); } .pod .m2 { background: #c7ced8; } .pod .m3 { background: #d89a5b; }
+  .pod .m1 { background: var(--gold); }
   .pod span { display: block; font: 700 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
   .pod b { display: block; font: 800 20px var(--display); text-transform: uppercase; letter-spacing: .02em; }
   .pod small { color: var(--ink-soft); font-size: 12px; }
@@ -492,7 +491,7 @@
   /* History. The current edition reads tonight's MATCHES and GOALS live.
      To close an edition, copy it into ARCHIVE as a snapshot and start the next letter in CURRENT:
      { id: 'A', name: 'Lightning Cup', date: 'Tue, Oct 27, 2026', venue: '...',
-       podium: [{ label: 'Ballers FC', color: '#7a3bb8', captain: 'Raman', players: ['Raman', 'John', ...] }, runner-up, 3rd],
+       champion: { label: 'Ballers FC', color: '#7a3bb8', captain: 'Raman', players: ['Raman', 'John', ...] },
        scorers: [{ name: 'Raman', team: 'Ballers FC', color: '#7a3bb8', g: 3, gp: 2 }] } */
   var CURRENT = { id: 'A', name: 'Lightning Cup', date: 'Tue, Oct 27, 2026', venue: 'Comdev Soccer Dome, Cambridge' };
   var ARCHIVE = [];
@@ -514,18 +513,18 @@
     });
     return {
       id: CURRENT.id, name: CURRENT.name, date: CURRENT.date, venue: CURRENT.venue, live: true,
-      podium: [podTeam(winner(fin)), podTeam(loser(fin)), podTeam(winner(match('third')))],
+      champion: podTeam(winner(fin)),
       scorers: Object.keys(byName).map(function (k) { return byName[k]; })
     };
   }
   var EDITIONS = ARCHIVE.concat([currentSnapshot()]);
+  var TROPHY = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
   function topOf(list) { return list.slice().sort(function (x, y) { return y.g - x.g || x.gp - y.gp; })[0]; }
 
   document.getElementById('editions').innerHTML = EDITIONS.slice().reverse().map(function (e) {
-    var done = e.podium[0];
-    var places = ['Champion', 'Runner-up', '3rd place'];
-    var pods = e.podium.map(function (p, i) {
-      return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m' + (i + 1) + '">' + (i + 1) + '</div><div><span>' + places[i] + '</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
+    var done = e.champion;
+    var pods = [e.champion].map(function (p) {
+      return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m1">' + TROPHY + '</div><div><span>Champion</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
     }).join('');
     var top = topOf(e.scorers);
     return '<section class="ed"><div class="ed-head"><div class="ed-no">Ed<b>' + esc(e.id) + '</b></div><div><h3>' + esc(e.name) + '</h3><small>' + esc(e.date) + ' · ' + esc(e.venue) + '</small></div><span class="ed-state">' + (done ? 'Final' : e.live ? 'Tonight' : '') + '</span></div>' +
