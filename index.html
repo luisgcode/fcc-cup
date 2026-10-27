@@ -232,6 +232,43 @@
   .boot.is-demo td { opacity: .75; }
   .empty { text-align: center; color: var(--ink-soft); padding: 18px 8px; font-size: 14px; }
 
+  /* Tabs */
+  .tabs { position: sticky; top: 0; z-index: 20; background: var(--night); box-shadow: 0 2px 8px rgba(13,27,46,.25); }
+  .tabs-in { max-width: 1100px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left)); display: flex; gap: 4px; }
+  .tab { all: unset; cursor: pointer; padding: 13px 14px 11px; color: rgba(255,255,255,.65); font: 700 16px var(--display); letter-spacing: .1em; text-transform: uppercase; border-bottom: 3px solid transparent; }
+  .tab[aria-selected="true"] { color: #fff; border-bottom-color: var(--gold); }
+  .tab:hover { color: #fff; }
+  .tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -4px; }
+
+  /* History */
+  .ed { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+  .ed-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: linear-gradient(160deg, var(--night) 0%, var(--night-2) 100%); color: #fff; }
+  .ed-no { flex: 0 0 auto; width: 46px; height: 46px; border-radius: 10px; background: var(--gold); color: var(--night); display: grid; place-items: center; font: 800 13px/1 var(--display); text-align: center; text-transform: uppercase; }
+  .ed-no b { display: block; font-size: 22px; }
+  .ed-head h3 { margin: 0; font: 800 22px var(--display); text-transform: uppercase; letter-spacing: .04em; }
+  .ed-head small { display: block; color: rgba(255,255,255,.7); font: 500 13px var(--body); }
+  .ed-state { margin-left: auto; font: 700 11px var(--body); letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,.14); }
+  .podium { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 12px; }
+  @media (min-width: 600px) { .podium { grid-template-columns: 1.2fr 1fr 1fr; } }
+  .pod { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; border-left-width: 5px; }
+  .pod .medal { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 15px var(--display); color: var(--night); }
+  .pod .m1 { background: var(--gold); } .pod .m2 { background: #c7ced8; } .pod .m3 { background: #d89a5b; }
+  .pod span { display: block; font: 700 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+  .pod b { display: block; font: 800 20px var(--display); text-transform: uppercase; letter-spacing: .02em; }
+  .pod small { color: var(--ink-soft); font-size: 12px; }
+  .pod.tbd b { color: var(--ink-soft); }
+  .pod { align-items: flex-start; }
+  .pod > div:last-child { min-width: 0; }
+  .roster { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .roster .pl { all: unset; cursor: pointer; font: 600 13px var(--body); padding: 3px 9px; border-radius: 20px; background: #eef1f6; }
+  .roster .pl:hover, .roster .pl:focus-visible { background: var(--night); color: #fff; }
+  .roster .pl i { font: 800 10px var(--display); font-style: normal; background: var(--gold); color: var(--night); border-radius: 3px; padding: 0 4px; }
+  .pod:first-child { background: #fffaea; }
+  .ed-boot { padding: 0 14px 12px; font-size: 14px; color: var(--ink-soft); }
+  .ed-boot b { color: var(--ink); }
+  .boot td.avg { font: 600 14px var(--body); color: var(--ink-soft); }
+  .legend { font-size: 12px; color: var(--ink-soft); margin: 10px 2px 0; }
+
   footer { text-align: center; color: var(--ink-soft); font-size: 12px; padding: 20px 16px 40px; }
   /* Phones: semis side by side, then final and champion, then 3rd place. No connector lines */
   @media (max-width: 599px) {
@@ -260,7 +297,12 @@
   </div>
 </header>
 
-<main class="wrap">
+<nav class="tabs"><div class="tabs-in" role="tablist" aria-label="Sections">
+  <button type="button" class="tab" role="tab" id="t-cup" aria-controls="p-cup" aria-selected="true">Lightning Cup</button>
+  <button type="button" class="tab" role="tab" id="t-history" aria-controls="p-history" aria-selected="false">History</button>
+</div></nav>
+
+<main class="wrap" id="p-cup" role="tabpanel" aria-labelledby="t-cup">
   <div class="sec-title"><h2>Squad list</h2><span id="squad-sum"></span></div>
   <div class="squad">
     <section class="panel">
@@ -284,6 +326,13 @@
 
   <div class="sec-title"><h2>Golden Boot</h2><span>Tap a player to see their card</span></div>
   <div class="card" id="scorers"></div>
+</main>
+
+<main class="wrap" id="p-history" role="tabpanel" aria-labelledby="t-history" hidden>
+  <div class="sec-title"><h2>Champions</h2><span>Every edition of the Cup</span></div>
+  <div id="editions"></div>
+  <div class="sec-title"><h2>All-time scorers</h2><span>Tap a player to see their card</span></div>
+  <div class="card" id="alltime"></div>
 </main>
 
 <footer>FriendsCafè Club of Canada · Soccer</footer>
@@ -439,6 +488,91 @@
         return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + '<button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.a + '</td></tr>';
       }).join('') + '</tbody></table>'
     : '';
+
+  /* History. The current edition reads tonight's MATCHES and GOALS live.
+     To close an edition, copy it into ARCHIVE as a snapshot and start the next letter in CURRENT:
+     { id: 'A', name: 'Lightning Cup', date: 'Tue, Oct 27, 2026', venue: '...',
+       podium: [{ label: 'Ballers FC', color: '#7a3bb8', captain: 'Raman', players: ['Raman', 'John', ...] }, runner-up, 3rd],
+       scorers: [{ name: 'Raman', team: 'Ballers FC', color: '#7a3bb8', g: 3, gp: 2 }] } */
+  var CURRENT = { id: 'A', name: 'Lightning Cup', date: 'Tue, Oct 27, 2026', venue: 'Comdev Soccer Dome, Cambridge' };
+  var ARCHIVE = [];
+
+  function teamByName(n) { return TEAMS.filter(function (t) { return t.name === n; })[0]; }
+  function podTeam(n) { var t = teamByName(n); return t ? { label: t.label, color: COLORS[t.name], captain: t.captain, players: t.players.filter(Boolean) } : null; }
+  /* Matches played = matches already kicked off where the player's team was on the pitch */
+  function played(player) {
+    var t = teamOf(player); if (!t) return 0;
+    return MATCHES.filter(function (m) { return m.state !== 'next' && (side(m.a) === t.name || side(m.b) === t.name); }).length;
+  }
+  function currentSnapshot() {
+    var fin = match('final');
+    var byName = {};
+    GOALS.forEach(function (g) {
+      var t = teamByName(g.team);
+      var s = byName[g.by] || (byName[g.by] = { name: g.by, team: t ? t.label : g.team, color: COLORS[g.team], g: 0, gp: played(g.by) });
+      s.g++;
+    });
+    return {
+      id: CURRENT.id, name: CURRENT.name, date: CURRENT.date, venue: CURRENT.venue, live: true,
+      podium: [podTeam(winner(fin)), podTeam(loser(fin)), podTeam(winner(match('third')))],
+      scorers: Object.keys(byName).map(function (k) { return byName[k]; })
+    };
+  }
+  var EDITIONS = ARCHIVE.concat([currentSnapshot()]);
+  function topOf(list) { return list.slice().sort(function (x, y) { return y.g - x.g || x.gp - y.gp; })[0]; }
+
+  document.getElementById('editions').innerHTML = EDITIONS.slice().reverse().map(function (e) {
+    var done = e.podium[0];
+    var places = ['Champion', 'Runner-up', '3rd place'];
+    var pods = e.podium.map(function (p, i) {
+      return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m' + (i + 1) + '">' + (i + 1) + '</div><div><span>' + places[i] + '</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
+    }).join('');
+    var top = topOf(e.scorers);
+    return '<section class="ed"><div class="ed-head"><div class="ed-no">Ed<b>' + esc(e.id) + '</b></div><div><h3>' + esc(e.name) + '</h3><small>' + esc(e.date) + ' · ' + esc(e.venue) + '</small></div><span class="ed-state">' + (done ? 'Final' : e.live ? 'Tonight' : '') + '</span></div>' +
+      '<div class="podium">' + pods + '</div>' +
+      '<div class="ed-boot">Top scorer: ' + (top ? '<b>' + esc(top.name) + '</b>, ' + top.g + (top.g === 1 ? ' goal' : ' goals') + ' in ' + top.gp + (top.gp === 1 ? ' match' : ' matches') : 'to be decided') + '</div></section>';
+  }).join('');
+
+  /* All-time table adds up every edition. Until the first real goal it shows example rows */
+  var all = {};
+  EDITIONS.forEach(function (e) {
+    e.scorers.forEach(function (s) {
+      var a = all[s.name] || (all[s.name] = { name: s.name, team: s.team, color: s.color, g: 0, gp: 0, eds: 0 });
+      a.g += s.g; a.gp += s.gp; a.eds++; a.team = s.team; a.color = s.color;
+    });
+  });
+  var allList = Object.keys(all).map(function (k) { return all[k]; });
+  var allDemo = allList.length === 0;
+  if (allDemo) allList = [
+    { name: 'Taha', team: 'Goal Diggers', color: COLORS.Blue, g: 4, gp: 2, eds: 1 },
+    { name: 'Raman', team: 'Ballers FC', color: COLORS.Purple, g: 3, gp: 2, eds: 1 },
+    { name: 'Saim', team: 'FlipAll United', color: COLORS.Red, g: 2, gp: 2, eds: 1 },
+    { name: 'Fuad', team: 'Winners FC', color: COLORS.Green, g: 1, gp: 2, eds: 1 }
+  ];
+  allList.sort(function (x, y) { return y.g - x.g || x.gp - y.gp || x.name.localeCompare(y.name); });
+  document.getElementById('alltime').innerHTML = (allDemo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') +
+    '<table class="boot' + (allDemo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">MP</th><th class="n">Avg</th></tr></thead><tbody>' +
+    allList.map(function (s, i) {
+      return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + s.color + '"></span><button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(s.team) + (s.eds > 1 ? ' · ' + s.eds + ' editions' : '') + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.gp + '</td><td class="n avg">' + (s.gp ? (s.g / s.gp).toFixed(1) : '-') + '</td></tr>';
+    }).join('') + '</tbody></table><p class="legend">G goals · MP matches played · Avg goals per match</p>';
+
+  /* Tabs. #history in the URL opens the History tab directly */
+  var TABS = [['t-cup', 'p-cup', ''], ['t-history', 'p-history', '#history']];
+  function showTab(id) {
+    TABS.forEach(function (t) {
+      var on = t[0] === id;
+      document.getElementById(t[0]).setAttribute('aria-selected', on);
+      document.getElementById(t[1]).hidden = !on;
+      if (on) history.replaceState(null, '', t[2] || location.pathname + location.search);
+    });
+  }
+  TABS.forEach(function (t) { document.getElementById(t[0]).addEventListener('click', function () { showTab(t[0]); }); });
+  document.querySelector('.tabs-in').addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var next = document.getElementById(document.getElementById('t-cup').getAttribute('aria-selected') === 'true' ? 't-history' : 't-cup');
+    showTab(next.id); next.focus();
+  });
+  if (location.hash === '#history') showTab('t-history');
 
   /* Player cards. RATING is the overall; the six stats lean on a style picked per player so everyone shines at something */
   var RATING = {
