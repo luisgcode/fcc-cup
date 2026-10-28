@@ -91,6 +91,18 @@
   .win-down:hover { color: #fff; }
   .win-down:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
   @keyframes nudge { 50% { transform: translateY(5px); } }
+  .win-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 18px; }
+  .win-acts .win-down { margin-top: 0; }
+  .win-play { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px 11px 12px; border-radius: 30px; background: var(--gold); color: var(--night); font: 800 16px var(--display); letter-spacing: .1em; text-transform: uppercase; box-shadow: 0 4px 16px rgba(245,183,0,.35); }
+  .win-play span { width: 30px; height: 30px; border-radius: 50%; background: var(--night); color: var(--gold); display: grid; place-items: center; }
+  .win-play svg { width: 14px; height: 14px; margin-left: 2px; }
+  .win-play:hover { background: #ffc61a; }
+  .win-play:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  /* Ceremony video player */
+  .cer { width: 100%; max-width: 1000px; }
+  .cer h3 { margin: 0 0 4px; color: #fff; font: 800 clamp(26px, 6vw, 40px)/1 var(--display); text-transform: uppercase; text-align: center; }
+  .cer p { margin: 0 0 12px; color: rgba(255,255,255,.65); font: 600 13px var(--body); text-align: center; }
+  .cer video { display: block; width: 100%; max-height: 75vh; border-radius: 12px; background: #000; }
   @media (prefers-reduced-motion: reduce) { .win-down svg { animation: none; } }
 
   /* Final table */
@@ -489,7 +501,11 @@
       '<div class="win-in">' + cup + '<p class="kicker">Lightning Cup champions</p><h1>' + esc(t.label) + '</h1>' +
       '<p class="win-sub">Winners of the first Lightning Cup edition</p>' +
       '<div class="roster">' + t.players.filter(Boolean).map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === t.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' +
-      '<button type="button" class="win-down" id="win-down">See the whole cup <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>';
+      '<div class="win-acts"><button type="button" class="win-play" id="win-play"><span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg></span>Watch the ceremony</button>' +
+      '<button type="button" class="win-down" id="win-down">See the whole cup <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div></div>';
+    document.getElementById('win-play').addEventListener('click', function () {
+      overlay('<div class="cer"><h3>Medal ceremony</h3><p>Edition A · Oct 27, 2026 · Medals and the $100 prize for ' + esc(t.label) + '</p><video src="ceremony.mp4" poster="ceremony.jpg" controls autoplay playsinline preload="none"></video></div>', 'Medal ceremony');
+    });
     document.getElementById('win-down').addEventListener('click', function () { document.querySelector('.hero').scrollIntoView({ behavior: 'smooth' }); });
     var PLACE = ['Champions', 'Runners-up', 'Third place', 'Fourth place'];
     document.getElementById('stand').innerHTML = STANDINGS.map(function (n, i) {
