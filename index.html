@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>FCC Lightning Cup</title>
-<meta name="description" content="FriendsCafè Club of Canada. Tue, Oct 27, 8:45 to 10:15 pm at Comdev Soccer Dome, Cambridge. Teams, scores and Golden Boot live.">
+<meta name="description" content="FriendsCafè Club of Canada. Tue, Oct 27, 8:45 to 10:15 pm at Comdev Soccer Dome, Cambridge. Winners FC are the first Lightning Cup champions.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://luisgcode.github.io/fcc-cup/">
 <meta property="og:title" content="Lightning Cup, FriendsCafè Club of Canada">
-<meta property="og:description" content="Tue, Oct 27, 8:45 to 10:15 pm at Comdev Soccer Dome, Cambridge. Teams, scores and Golden Boot live.">
+<meta property="og:description" content="Tue, Oct 27, 8:45 to 10:15 pm at Comdev Soccer Dome, Cambridge. Winners FC are the first Lightning Cup champions.">
 <meta property="og:image" content="https://luisgcode.github.io/fcc-cup/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -50,6 +50,37 @@
   .hero .sub { margin: 8px 0 0; color: rgba(255,255,255,.75); font-size: 14px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .chip { font: 600 12px var(--body); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); padding: 4px 10px; border-radius: 20px; }
+
+  /* Champions cover: first screen of the site, photo of the winners with their medals */
+  .win { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; color: #fff; overflow: hidden;
+    background: radial-gradient(90% 70% at 50% 30%, #3fbf66 0%, #1f7a3c 45%, #0d1b2e 100%); }
+  .win > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .win::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,27,46,0) 35%, rgba(13,27,46,.55) 62%, rgba(13,27,46,.95) 100%); }
+  .win::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--gold); }
+  .win-in { position: relative; z-index: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left)) calc(34px + env(safe-area-inset-bottom)); }
+  .win-cup { width: 46px; height: 46px; color: var(--gold); filter: drop-shadow(0 2px 10px rgba(245,183,0,.5)); }
+  .win .kicker { margin-top: 10px; }
+  .win h1 { font: 800 clamp(48px, 14vw, 104px)/.9 var(--display); text-transform: uppercase; margin: 0; letter-spacing: .01em; text-shadow: 0 3px 18px rgba(0,0,0,.35); }
+  .win-sub { margin: 10px 0 0; font: 700 clamp(18px, 4.6vw, 26px)/1.15 var(--display); letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.92); }
+  .win .roster { margin-top: 14px; gap: 6px; }
+  .win .roster .pl { background: rgba(255,255,255,.16); color: #fff; font-size: 14px; padding: 5px 12px; }
+  .win .roster .pl:hover, .win .roster .pl:focus-visible { background: #fff; color: var(--night); }
+  .win-down { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font: 700 13px var(--display); letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.8); }
+  .win-down svg { width: 22px; height: 22px; animation: nudge 1.4s ease-in-out infinite; }
+  .win-down:hover { color: #fff; }
+  .win-down:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+  @keyframes nudge { 50% { transform: translateY(5px); } }
+  @media (prefers-reduced-motion: reduce) { .win-down svg { animation: none; } }
+
+  /* Final table */
+  .stand { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  @media (min-width: 760px) { .stand { grid-template-columns: repeat(4, 1fr); } }
+  .stand li { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid; border-radius: 10px; padding: 12px; }
+  .stand .medal { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 800 17px var(--display); color: var(--night); background: #eef1f6; }
+  .stand .p1 .medal { background: var(--gold); } .stand .p2 .medal { background: #cfd6df; } .stand .p3 .medal { background: #d9955b; }
+  .stand .p1 { background: #fffaea; }
+  .stand b { display: block; font: 800 20px/1.05 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+  .stand small { color: var(--ink-soft); font-size: 12px; }
 
   .wrap { max-width: 1100px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-left)) 60px; }
   .sec-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 26px 0 12px; }
@@ -282,7 +313,7 @@
   .podium { display: grid; grid-template-columns: 1fr; gap: 8px; padding: 12px; }
   .pod { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; border-left-width: 5px; }
   .pod .medal { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 800 15px var(--display); color: var(--night); }
-  .pod .m1 { background: var(--gold); }
+  .pod .m1 { background: var(--gold); } .pod .m2 { background: #cfd6df; } .pod .m3 { background: #d9955b; } .pod .m4 { background: #eef1f6; }
   .pod span { display: block; font: 700 11px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
   .pod b { display: block; font: 800 20px var(--display); text-transform: uppercase; letter-spacing: .02em; }
   .pod small { color: var(--ink-soft); font-size: 12px; }
@@ -318,13 +349,15 @@
 </style>
 </head>
 <body>
+<section class="win" id="win" aria-label="Champions"></section>
+
 <header class="hero">
   <div class="hero-in">
     <div class="crest"><img src="logo-400.png" alt="FriendsCafè Club of Canada Soccer"></div>
     <div>
       <p class="kicker">FriendsCafè Club of Canada</p>
       <h1>Lightning Cup</h1>
-      <p class="sub">One night. Four teams. Ninety minutes of football.</p>
+      <p class="sub">Edition A is in the books. One night, four teams, one champion.</p>
       <div class="chips"><span class="chip">Tue, Oct 27</span><span class="chip">8:45 to 10:15 pm</span><span class="chip">Comdev Soccer Dome, Cambridge</span><span class="chip">20 players</span></div>
     </div>
   </div>
@@ -336,7 +369,10 @@
 </div></nav>
 
 <main class="wrap" id="p-cup" role="tabpanel" aria-labelledby="t-cup">
-  <div class="sec-title"><h2>Squad list</h2><span id="squad-sum"></span></div>
+  <div class="sec-title"><h2>Final table</h2><span>Edition A · Oct 27, 2026</span></div>
+  <ol class="stand" id="stand"></ol>
+
+  <div class="sec-title" id="squad-title"><h2>Squad list</h2><span id="squad-sum"></span></div>
   <div class="squad">
     <section class="panel">
       <div class="panel-head">Confirmed <span class="count" id="c-count"></span></div>
@@ -351,7 +387,7 @@
   <div class="sec-title"><h2>Teams</h2></div>
   <div class="teams" id="teams"></div>
 
-  <div class="sec-title"><h2>Road to the final</h2><span>Matchups to be drawn</span></div>
+  <div class="sec-title"><h2>Road to the final</h2><span id="road-sub">Matchups to be drawn</span></div>
   <div class="card">
     <div class="bracket" id="bracket"></div>
     <div class="pitch-title">Who plays where</div>
@@ -382,6 +418,10 @@
     { name: 'Red', label: 'FlipAll United', cls: 't-red', captain: 'Saim', players: ['Saim', 'Atif Mahmud', 'Altamash', 'Jay', 'Mauro'], photo: '' },
     { name: 'Purple', label: 'Ballers FC', cls: 't-purple', captain: 'Raman', players: ['Raman', 'John', 'Arun Paul', 'Ahmed', 'Luis'], photo: '' }
   ];
+  /* Final placings, 1st to 4th, by team key. Drives the cover, the final table and the History podium */
+  var STANDINGS = ['Green', 'Blue', 'Red', 'Purple'];
+  /* Cover photo of the champions with their medals, e.g. 'players/champions.jpg'. Empty = green backdrop */
+  var WIN_PHOTO = '';
   var CAMERA = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5L9 4zm3 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>';
   var SIZE = 5;
   /* Display name of a team; name stays the internal key used by matches and goals */
@@ -406,6 +446,8 @@
   document.getElementById('w-count').textContent = WAITLIST.length;
   /* No one waiting: hide the wait list and let the squad panel take the full width */
   if (!WAITLIST.length) { document.querySelector('.panel.wait').hidden = true; document.querySelector('.squad').style.gridTemplateColumns = '1fr'; }
+  /* Cup over: the sign up list is no longer news */
+  if (STANDINGS.length) { document.getElementById('squad-title').hidden = true; document.querySelector('.squad').hidden = true; }
   document.getElementById('squad-sum').textContent = (CONFIRMED.length + ready) + ' ready of ' + (TEAMS.length * SIZE) + ' spots';
 
   document.getElementById('teams').innerHTML = TEAMS.map(function (t, ti) {
@@ -416,6 +458,24 @@
     }
     return '<section class="team ' + t.cls + '"><div class="team-head"><span class="badge">' + (ti + 1) + '</span><div><button type="button" class="team-name" data-team="' + esc(t.name) + '"><h3>' + esc(t.label) + '</h3><span class="see">View team \u203A</span></button><small>' + t.players.filter(Boolean).length + ' / ' + SIZE + ' players</small></div></div>' + (t.photo ? '<div class="photo"><img src="' + esc(t.photo) + '" alt="' + esc(t.label) + ' team photo" loading="lazy"></div>' : '') + '<ol class="slots">' + slots + '</ol></section>';
   }).join('');
+
+  /* Champions cover and final table */
+  (function () {
+    var t = TEAMS.filter(function (x) { return x.name === STANDINGS[0]; })[0];
+    if (!t) { document.getElementById('win').hidden = true; return; }
+    var cup = '<svg class="win-cup" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3V3zm0 4H6v1a2 2 0 0 0 1 1.7V7zm10 0v2.7A2 2 0 0 0 18 8V7h-1zM7 20h10v1H7z"/></svg>';
+    document.getElementById('win').innerHTML = (WIN_PHOTO ? '<img src="' + esc(WIN_PHOTO) + '" alt="' + esc(t.label) + ' with their medals">' : '') +
+      '<div class="win-in">' + cup + '<p class="kicker">Lightning Cup champions</p><h1>' + esc(t.label) + '</h1>' +
+      '<p class="win-sub">Winners of the first Lightning Cup edition</p>' +
+      '<div class="roster">' + t.players.filter(Boolean).map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === t.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' +
+      '<button type="button" class="win-down" id="win-down">See the whole cup <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>';
+    document.getElementById('win-down').addEventListener('click', function () { document.querySelector('.hero').scrollIntoView({ behavior: 'smooth' }); });
+    var PLACE = ['Champions', 'Runners-up', 'Third place', 'Fourth place'];
+    document.getElementById('stand').innerHTML = STANDINGS.map(function (n, i) {
+      var x = TEAMS.filter(function (y) { return y.name === n; })[0];
+      return '<li class="p' + (i + 1) + '" style="border-left-color:var(--' + n.toLowerCase() + ')"><span class="medal">' + (i + 1) + '</span><div><b>' + esc(x.label) + '</b><small>' + PLACE[i] + ' · Captain ' + esc(x.captain) + '</small></div></li>';
+    }).join('');
+  })();
 
   /* Matches: state is 'next', 'live' or 'done'. Ties in a done match go to pens: { a: 3, b: 2 } */
   var MATCHES = [
@@ -531,7 +591,8 @@
 
   /* Live draw: shuffles the 4 teams into the semis. Nothing is saved, a reload goes back to TBD */
   var drawBtn = document.getElementById('draw-btn');
-  if (match('sf1').a) drawBtn.hidden = true;
+  if (match('sf1').a || STANDINGS.length) drawBtn.hidden = true;
+  if (STANDINGS.length) document.getElementById('road-sub').textContent = 'Scores being added';
   drawBtn.addEventListener('click', function () {
     drawBtn.disabled = true;
     drawBtn.textContent = 'Drawing...';
@@ -570,7 +631,7 @@
 
   /* Example rows shown only until the first real goal is logged */
   var SAMPLE = [{team:'Blue',by:'Taha'},{team:'Blue',by:'Taha'},{team:'Purple',by:'Mauro'},{team:'Green',by:'Fuad'},{team:'Red',by:'Saim'},{team:'Purple',by:'Raman'}];
-  var demo = GOALS.length === 0;
+  var demo = GOALS.length === 0 && !STANDINGS.length;
   var stats = {};
   (demo ? SAMPLE : GOALS).forEach(function (g) {
     var s = stats[g.by] || (stats[g.by] = { name: g.by, team: g.team, g: 0 }); s.g++;
@@ -580,7 +641,7 @@
     ? (demo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') + '<table class="boot' + (demo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">MP</th></tr></thead><tbody>' + list.map(function (s, i) {
         return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + COLORS[s.team] + '"></span>' + '<button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(label(s.team)) + '</span></td><td class="n">' + s.g + '</td><td class="n">' + (demo ? 1 : played(s.name)) + '</td></tr>';
       }).join('') + '</tbody></table>'
-    : '';
+    : '<p class="empty">Goals from the night are being added. Check back soon.</p>';
 
   /* History. The current edition reads tonight's MATCHES and GOALS live.
      To close an edition, copy it into ARCHIVE as a snapshot and start the next letter in CURRENT:
@@ -607,7 +668,8 @@
     });
     return {
       id: CURRENT.id, name: CURRENT.name, date: CURRENT.date, venue: CURRENT.venue, live: true,
-      champion: podTeam(winner(fin)),
+      champion: podTeam(winner(fin) || STANDINGS[0]),
+      places: STANDINGS.map(podTeam),
       scorers: Object.keys(byName).map(function (k) { return byName[k]; })
     };
   }
@@ -617,8 +679,9 @@
 
   document.getElementById('editions').innerHTML = EDITIONS.slice().reverse().map(function (e) {
     var done = e.champion;
-    var pods = [e.champion].map(function (p) {
-      return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m1">' + TROPHY + '</div><div><span>Champion</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
+    var PODL = ['Champion', 'Runners-up', 'Third place', 'Fourth place'];
+    var pods = (e.places && e.places.length ? e.places : [e.champion]).map(function (p, i) {
+      return '<div class="pod' + (p ? '' : ' tbd') + '"' + (p ? ' style="border-left-color:' + p.color + '"' : '') + '><div class="medal m' + (i + 1) + '">' + (i ? i + 1 : TROPHY) + '</div><div><span>' + PODL[i] + '</span><b>' + (p ? esc(p.label) : 'TBD') + '</b>' + (p ? '<div class="roster">' + p.players.map(function (n) { return '<button type="button" class="pl" data-player="' + esc(n) + '">' + esc(n) + (n === p.captain ? ' <i>C</i>' : '') + '</button>'; }).join('') + '</div>' : '') + '</div></div>';
     }).join('');
     var top = topOf(e.scorers);
     return '<section class="ed"><div class="ed-head"><div class="ed-no">Ed<b>' + esc(e.id) + '</b></div><div><h3>' + esc(e.name) + '</h3><small>' + esc(e.date) + ' · ' + esc(e.venue) + '</small></div><span class="ed-state">' + (done ? 'Final' : e.live ? 'Tonight' : '') + '</span></div>' +
@@ -635,7 +698,7 @@
     });
   });
   var allList = Object.keys(all).map(function (k) { return all[k]; });
-  var allDemo = allList.length === 0;
+  var allDemo = allList.length === 0 && !STANDINGS.length;
   if (allDemo) allList = [
     { name: 'Taha', team: 'Goal Diggers', color: COLORS.Blue, g: 4, gp: 2, eds: 1 },
     { name: 'Raman', team: 'Ballers FC', color: COLORS.Purple, g: 3, gp: 2, eds: 1 },
@@ -643,7 +706,7 @@
     { name: 'Fuad', team: 'Winners FC', color: COLORS.Green, g: 1, gp: 2, eds: 1 }
   ];
   allList.sort(function (x, y) { return y.g - x.g || x.gp - y.gp || x.name.localeCompare(y.name); });
-  document.getElementById('alltime').innerHTML = (allDemo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') +
+  document.getElementById('alltime').innerHTML = !allList.length && !allDemo ? '<p class="empty">Goals from Edition A are being added. Check back soon.</p>' : (allDemo ? '<div class="demo">Example only. Real stats start at kickoff.</div>' : '') +
     '<table class="boot' + (allDemo ? ' is-demo' : '') + '"><thead><tr><th></th><th>Player</th><th class="n">G</th><th class="n">MP</th><th class="n">Avg</th></tr></thead><tbody>' +
     allList.map(function (s, i) {
       return '<tr class="' + (i === 0 ? 'top' : '') + '"><td class="rk">' + (i + 1) + '</td><td><span class="dot" style="background:' + s.color + '"></span><button type="button" class="pl" data-player="' + esc(s.name) + '">' + esc(s.name) + '</button><span class="tm">' + esc(s.team) + (s.eds > 1 ? ' · ' + s.eds + ' editions' : '') + '</span></td><td class="n">' + s.g + '</td><td class="n">' + s.gp + '</td><td class="n avg">' + (s.gp ? (s.g / s.gp).toFixed(1) : '-') + '</td></tr>';
