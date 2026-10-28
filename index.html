@@ -387,8 +387,8 @@
   <div class="sec-title"><h2>Teams</h2></div>
   <div class="teams" id="teams"></div>
 
-  <div class="sec-title"><h2>Road to the final</h2><span id="road-sub">Matchups to be drawn</span></div>
-  <div class="card">
+  <div class="sec-title" id="road-title"><h2>Road to the final</h2><span id="road-sub">Matchups to be drawn</span></div>
+  <div class="card" id="road">
     <div class="bracket" id="bracket"></div>
     <div class="pitch-title">Who plays where</div>
     <div class="venue"><div class="pitches" id="pitches"></div><div class="door"><span>Door</span></div></div>
@@ -592,7 +592,8 @@
   /* Live draw: shuffles the 4 teams into the semis. Nothing is saved, a reload goes back to TBD */
   var drawBtn = document.getElementById('draw-btn');
   if (match('sf1').a || STANDINGS.length) drawBtn.hidden = true;
-  if (STANDINGS.length) document.getElementById('road-sub').textContent = 'Scores being added';
+  /* Cup over: the bracket comes back when the next edition is set up (STANDINGS emptied) */
+  if (STANDINGS.length) { document.getElementById('road-title').hidden = true; document.getElementById('road').hidden = true; }
   drawBtn.addEventListener('click', function () {
     drawBtn.disabled = true;
     drawBtn.textContent = 'Drawing...';
